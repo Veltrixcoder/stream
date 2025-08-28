@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "https://veltrixcode-gcx.hf.space/$1" }
+  ]
+}
