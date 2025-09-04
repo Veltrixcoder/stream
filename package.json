@@ -22,7 +22,8 @@
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.19.2",
     "node-fetch": "^3.3.2",
-    "puppeteer": "^23.4.1"
+    "puppeteer": "^23.4.1",
+    "swagger-ui-express": "^5.0.1"
   }
 }
 

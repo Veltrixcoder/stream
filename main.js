@@ -3,6 +3,7 @@ const axios = require('axios');
 
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
+const swaggerUi = require('swagger-ui-express');
 
 const ORIGIN = 'https://filmyfly.navy';
 
@@ -91,6 +92,132 @@ const app = express();
 app.get('/', (_req, res) => {
     res.type('text/plain').send('OK');
 });
+
+// --- OpenAPI (Swagger) Docs ---
+const openapiSpec = {
+    openapi: '3.0.3',
+    info: {
+        title: 'FilmyFly Scraper API',
+        version: '1.0.0',
+        description: 'Endpoints to scrape FilmyFly and resolve stream URLs.'
+    },
+    servers: [
+        { url: 'https://abcd.com', description: 'Production' },
+        { url: 'http://localhost:3000', description: 'Local' }
+    ],
+    paths: {
+        '/': {
+            get: {
+                summary: 'Health check',
+                responses: { '200': { description: 'OK' } }
+            }
+        },
+        '/home': {
+            get: {
+                summary: 'Scrape home page for trending and latest',
+                responses: {
+                    '200': {
+                        description: 'Scraped sections',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        source: { type: 'string' },
+                                        trending: {
+                                            type: 'object',
+                                            properties: {
+                                                count: { type: 'integer' },
+                                                items: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'object',
+                                                        properties: {
+                                                            title: { type: 'string' },
+                                                            thumbnail: { type: 'string' },
+                                                            downloadPage: { type: 'string' }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        latest: { $ref: '#/components/schemas/Section' }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        '/search': {
+            get: {
+                summary: 'Search for movies',
+                parameters: [
+                    { in: 'query', name: 'q', schema: { type: 'string' }, required: true }
+                ],
+                responses: {
+                    '200': {
+                        description: 'Search results',
+                        content: { 'application/json': { schema: { $ref: '#/components/schemas/SearchResult' } } }
+                    },
+                    '400': { description: 'q required' }
+                }
+            }
+        },
+        '/hlstr/{id}': {
+            get: {
+                summary: 'Trace HLS url by moviesapi id',
+                parameters: [
+                    { in: 'path', name: 'id', schema: { type: 'string' }, required: true }
+                ],
+                responses: { '200': { description: 'HLS data' }, '404': { description: 'Not found' } }
+            }
+        },
+        '/streams/{downloadPage}': {
+            get: {
+                summary: 'Resolve all downloadable streams from a download page path',
+                parameters: [
+                    { in: 'path', name: 'downloadPage', schema: { type: 'string' }, required: true, description: 'Path after /page-download/, accept wildcards' }
+                ],
+                responses: { '200': { description: 'Resolved streams' } }
+            }
+        }
+    },
+    components: {
+        schemas: {
+            Item: {
+                type: 'object',
+                properties: {
+                    title: { type: 'string' },
+                    thumbnail: { type: 'string' },
+                    downloadPage: { type: 'string' }
+                }
+            },
+            Section: {
+                type: 'object',
+                properties: {
+                    count: { type: 'integer' },
+                    items: { type: 'array', items: { $ref: '#/components/schemas/Item' } }
+                }
+            },
+            SearchResult: {
+                type: 'object',
+                properties: {
+                    source: { type: 'string' },
+                    query: { type: 'string' },
+                    count: { type: 'integer' },
+                    items: { type: 'array', items: { $ref: '#/components/schemas/Item' } }
+                }
+            }
+        }
+    }
+};
+
+app.get('/openapi.json', (_req, res) => {
+    res.json(openapiSpec);
+});
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec, { explorer: true }));
 
 app.get('/home', async (_req, res) => {
     try {
