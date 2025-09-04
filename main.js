@@ -203,10 +203,9 @@ async function headWithHeaders(url, referer) {
     }
 }
 
-// Use headless browser to observe first HLS (.m3u8) request from moviesapi page
+// Use headless browser to observe first HLS (.m3u8) request from embed page
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
-async function traceHlsFromMoviesApi(id) {
-    const pageUrl = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
+async function traceHlsFromEmbed(pageUrl) {
     const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox','--disable-setuid-sandbox'] });
     try {
         const page = await browser.newPage();
@@ -235,7 +234,7 @@ app.get('/hlstr/:id', async (req, res) => {
     try {
         const id = (req.params.id || '').trim();
         if (!id) return res.status(400).json({ error: 'id required' });
-        const traced = await traceHlsFromMoviesApi(id);
+        const traced = await traceHlsFromEmbed(`https://vidora.stream/embed/${encodeURIComponent(id)}`);
         if (!traced.result) return res.status(404).json({ error: 'hls not observed', sourcePage: traced.pageUrl });
         // Return only the needed request headers for playback
         res.json({
@@ -243,7 +242,7 @@ app.get('/hlstr/:id', async (req, res) => {
             hlsUrl: traced.result.hlsUrl,
             headers: {
                 referer: traced.pageUrl,
-                origin: 'https://moviesapi.club'
+                origin: 'https://vidora.stream'
             }
         });
     } catch (err) {
