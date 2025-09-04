@@ -1,11 +1,50 @@
 const express = require('express');
-const axios = require('axios');
-
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const swaggerUi = require('swagger-ui-express');
 
 const ORIGIN = 'https://filmyfly.navy';
+
+// Shared browser instance for better performance
+let browser = null;
+
+async function getBrowser() {
+    if (!browser) {
+        browser = await puppeteer.launch({ 
+            headless: 'new', 
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] 
+        });
+    }
+    return browser;
+}
+
+async function fetchWithPuppeteer(url, options = {}) {
+    const browser = await getBrowser();
+    const page = await browser.newPage();
+    
+    try {
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36');
+        await page.setViewport({ width: 1920, height: 1080 });
+        
+        if (options.headers) {
+            await page.setExtraHTTPHeaders(options.headers);
+        }
+        
+        const response = await page.goto(url, { 
+            waitUntil: 'domcontentloaded', 
+            timeout: options.timeout || 30000 
+        });
+        
+        if (!response.ok()) {
+            throw new Error(`HTTP ${response.status()}: ${response.statusText()}`);
+        }
+        
+        const html = await page.content();
+        return { html, url: response.url() };
+    } finally {
+        await page.close();
+    }
+}
 
 function htmlDecode(text) {
     if (!text) return '';
@@ -33,12 +72,7 @@ function toDownloadShortPath(href) {
 }
 
 async function fetchHomeHtml() {
-    const { data: html } = await axios.get(ORIGIN, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
-        },
-        timeout: 15000
-    });
+    const { html } = await fetchWithPuppeteer(ORIGIN, { timeout: 15000 });
     return html;
 }
 
@@ -234,11 +268,8 @@ app.get('/home', async (_req, res) => {
 // Search endpoint: GET /search?q=QUERY
 async function fetchSearchHtml(query) {
     const url = `${ORIGIN}/site-1.html?to-search=${encodeURIComponent(query)}`;
-    const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        timeout: 20000
-    });
-    return { url, html: data };
+    const { html, url: finalUrl } = await fetchWithPuppeteer(url, { timeout: 20000 });
+    return { url: finalUrl, html };
 }
 
 function parseSearchResults(html) {
@@ -278,11 +309,8 @@ app.get('/search', async (req, res) => {
 // --- HLS tracer for moviesapi.club ---
 async function fetchMoviesApiHtml(id) {
     const url = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
-    const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        timeout: 20000
-    });
-    return { url, html: data };
+    const { html, url: finalUrl } = await fetchWithPuppeteer(url, { timeout: 20000 });
+    return { url: finalUrl, html };
 }
 
 function extractHlsFromMoviesHtml(html) {
@@ -295,48 +323,15 @@ function extractHlsFromMoviesHtml(html) {
     return '';
 }
 
-async function headWithHeaders(url, referer) {
-    try {
-        const resp = await axios.head(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0',
-                'Referer': referer || 'https://moviesapi.club/',
-                'Origin': 'https://moviesapi.club'
-            },
-            timeout: 20000,
-            maxRedirects: 3,
-            validateStatus: (s) => s >= 200 && s < 400
-        });
-        return { status: resp.status, headers: resp.headers };
-    } catch (e) {
-        // Fallback to GET small range
-        try {
-            const resp = await axios.get(url, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0',
-                    'Referer': referer || 'https://moviesapi.club/',
-                    'Origin': 'https://moviesapi.club',
-                    'Range': 'bytes=0-0'
-                },
-                responseType: 'arraybuffer',
-                timeout: 20000,
-                maxRedirects: 3,
-                validateStatus: (s) => s >= 200 && s < 400
-            });
-            return { status: resp.status, headers: resp.headers };
-        } catch (err) {
-            throw err;
-        }
-    }
-}
+// Removed headWithHeaders - using Puppeteer for all requests now
 
 // Use headless browser to observe first HLS (.m3u8) request from an embed page
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 async function traceHlsFromEmbed(pageUrl) {
-    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox','--disable-setuid-sandbox'] });
+    const browser = await getBrowser();
+    const page = await browser.newPage();
     try {
-        const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0');
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
         let found = null;
         page.on('response', async (resp) => {
             try {
@@ -353,15 +348,15 @@ async function traceHlsFromEmbed(pageUrl) {
         }
         return { pageUrl, result: found };
     } finally {
-        await browser.close();
+        await page.close();
     }
 }
 async function traceHlsFromMoviesApi(id) {
     const pageUrl = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
-    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox','--disable-setuid-sandbox'] });
+    const browser = await getBrowser();
+    const page = await browser.newPage();
     try {
-        const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0');
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
         let found = null;
         page.on('response', async (resp) => {
             try {
@@ -378,19 +373,11 @@ async function traceHlsFromMoviesApi(id) {
         }
         return { pageUrl, result: found };
     } finally {
-        await browser.close();
+        await page.close();
     }
 }
 
-// Fetch moviesapi HTML and extract the iframe embed URL
-async function fetchMoviesApiHtml(id) {
-    const url = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
-    const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        timeout: 20000
-    });
-    return { url, html: data };
-}
+// Duplicate function removed - using the Puppeteer version above
 
 function extractEmbedUrlFromMoviesHtml(html) {
     const $ = cheerio.load(html);
@@ -453,20 +440,14 @@ app.get('/streams/*', async (req, res) => {
 
         // 1) Open the site download page
         const downloadUrl = `${ORIGIN}/page-download/${encodeURI(shortPath)}`;
-        const { data: downloadHtml } = await axios.get(downloadUrl, {
-            headers: { 'User-Agent': 'Mozilla/5.0' },
-            timeout: 15000
-        });
+        const { html: downloadHtml } = await fetchWithPuppeteer(downloadUrl, { timeout: 15000 });
 
         // 2) Extract intermediate link (e.g., linkmake.in)
         const interUrl = parseIntermediateLinkFromDownloadPage(downloadHtml);
         if (!interUrl) return res.status(404).json({ error: 'intermediate link not found' });
 
         // 3) Open intermediate link page
-        const { data: protectorHtml } = await axios.get(interUrl, {
-            headers: { 'User-Agent': 'Mozilla/5.0' },
-            timeout: 15000
-        });
+        const { html: protectorHtml } = await fetchWithPuppeteer(interUrl, { timeout: 15000 });
 
         // 4) Extract streams (ids and qualities)
         const streams = parseStreamsFromProtector(protectorHtml);
@@ -524,34 +505,30 @@ async function resolveStreamById(id) {
 // Validate that a final stream URL is actually retrievable (avoid dead/error links)
 async function isValidStreamUrl(url) {
     try {
-        // Try HEAD first (some CDNs support range)
-        const head = await axios.head(url, {
-            headers: { 'User-Agent': 'Mozilla/5.0', 'Range': 'bytes=0-0' },
-            timeout: 15000,
-            maxRedirects: 3,
-            validateStatus: (s) => s >= 200 && s < 400
-        });
-        const ct = (head.headers['content-type'] || '').toLowerCase();
-        if (ct && !ct.includes('text/html')) return true;
-    } catch (_) {
-        // ignore and try GET
-    }
-
-    try {
-        const get = await axios.get(url, {
-            headers: { 'User-Agent': 'Mozilla/5.0', 'Range': 'bytes=0-0' },
-            timeout: 20000,
-            maxRedirects: 3,
-            responseType: 'arraybuffer',
-            validateStatus: (s) => s >= 200 && s < 400
-        });
-        const ct = (get.headers['content-type'] || '').toLowerCase();
-        if (ct.includes('text/html')) {
-            const text = Buffer.from(get.data).toString('utf8');
-            if (/failed\s*to\s*get\s*direct\s*url/i.test(text)) return false;
-            return false;
+        const browser = await getBrowser();
+        const page = await browser.newPage();
+        
+        try {
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+            await page.setExtraHTTPHeaders({ 'Range': 'bytes=0-0' });
+            
+            const response = await page.goto(url, { 
+                waitUntil: 'domcontentloaded', 
+                timeout: 20000 
+            });
+            
+            if (!response.ok()) return false;
+            
+            const ct = response.headers()['content-type'] || '';
+            if (ct.toLowerCase().includes('text/html')) {
+                const content = await page.content();
+                if (/failed\s*to\s*get\s*direct\s*url/i.test(content)) return false;
+                return false;
+            }
+            return true;
+        } finally {
+            await page.close();
         }
-        return true;
     } catch (_) {
         return false;
     }
@@ -559,11 +536,8 @@ async function isValidStreamUrl(url) {
 
 // Helper to fetch with UA and timeout
 async function fetchPage(url) {
-    const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        timeout: 15000
-    });
-    return data;
+    const { html } = await fetchWithPuppeteer(url, { timeout: 15000 });
+    return html;
 }
 
 // Extract the Watch Online link from a cloud page shaped like res.html
@@ -600,9 +574,32 @@ function extractStreamUrlFromWatch(html) {
 // Single-id stream endpoint removed; use /streams/{downloadpage}
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`Server listening on http://localhost:${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down gracefully...');
+    if (browser) {
+        await browser.close();
+    }
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});
+
+process.on('SIGTERM', async () => {
+    console.log('Shutting down gracefully...');
+    if (browser) {
+        await browser.close();
+    }
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
 });
 
 
