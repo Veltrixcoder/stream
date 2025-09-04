@@ -203,7 +203,7 @@ async function headWithHeaders(url, referer) {
     }
 }
 
-// Use headless browser to observe first HLS (.m3u8) request from embed page
+// Use headless browser to observe first HLS (.m3u8) request from an embed page
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 async function traceHlsFromEmbed(pageUrl) {
     const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox','--disable-setuid-sandbox'] });
@@ -229,21 +229,67 @@ async function traceHlsFromEmbed(pageUrl) {
         await browser.close();
     }
 }
+async function traceHlsFromMoviesApi(id) {
+    const pageUrl = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
+    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox','--disable-setuid-sandbox'] });
+    try {
+        const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0');
+        let found = null;
+        page.on('response', async (resp) => {
+            try {
+                const u = resp.url();
+                if (!/\.m3u8(\?|$)/i.test(u)) return;
+                if (found) return;
+                found = { hlsUrl: u, status: resp.status(), headers: resp.headers() };
+            } catch (_) {}
+        });
+        await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+        const start = Date.now();
+        while (!found && Date.now() - start < 15000) {
+            await sleep(250);
+        }
+        return { pageUrl, result: found };
+    } finally {
+        await browser.close();
+    }
+}
+
+// Fetch moviesapi HTML and extract the iframe embed URL
+async function fetchMoviesApiHtml(id) {
+    const url = `https://moviesapi.club/movie/${encodeURIComponent(id)}`;
+    const { data } = await axios.get(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+        timeout: 20000
+    });
+    return { url, html: data };
+}
+
+function extractEmbedUrlFromMoviesHtml(html) {
+    const $ = cheerio.load(html);
+    let src = $('iframe#frame2').attr('src') || '';
+    if (!src) src = $('iframe').first().attr('src') || '';
+    return src;
+}
 
 app.get('/hlstr/:id', async (req, res) => {
     try {
         const id = (req.params.id || '').trim();
         if (!id) return res.status(400).json({ error: 'id required' });
-        const traced = await traceHlsFromEmbed(`https://vidora.stream/embed/${encodeURIComponent(id)}`);
-        if (!traced.result) return res.status(404).json({ error: 'hls not observed', sourcePage: traced.pageUrl });
-        // Return only the needed request headers for playback
+        // 1) Get moviesapi page and find the embed URL (iframe)
+        const { url: pageUrl, html } = await fetchMoviesApiHtml(id);
+        const embedUrl = extractEmbedUrlFromMoviesHtml(html);
+        if (!embedUrl) return res.status(404).json({ error: 'embed url not found', sourcePage: pageUrl });
+        // 2) Open the embed URL and capture the first HLS request
+        const traced = await traceHlsFromEmbed(embedUrl);
+        if (!traced.result) return res.status(404).json({ error: 'hls not observed', sourcePage: pageUrl, embedPage: embedUrl });
+        // 3) Return only referer and origin for the embed host
+        const origin = (() => { try { return new URL(embedUrl).origin; } catch { return ''; } })();
         res.json({
-            sourcePage: traced.pageUrl,
+            sourcePage: pageUrl,
+            embedPage: embedUrl,
             hlsUrl: traced.result.hlsUrl,
-            headers: {
-                referer: traced.pageUrl,
-                origin: 'https://vidora.stream'
-            }
+            headers: { referer: embedUrl, origin }
         });
     } catch (err) {
         res.status(500).json({ error: err.message || 'Internal Server Error' });
