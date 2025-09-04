@@ -1,23 +1,29 @@
 {
-  "name": "viewtube-decipher",
+  "name": "filmyfly-scraper",
   "version": "1.0.0",
-  "description": "YouTube streaming data deciphering utility using sig.js, utils.js, and cache.js.",
-  "main": "yt.js",
-  "type": "commonjs",
+  "description": "Node server to scrape trending movies from filmyfly.navy and return JSON",
+  "main": "main.js",
   "scripts": {
-    "start": "node yt.js"
+    "start": "node \"/Users/shashwat/Desktop/New folder/main.js\""
   },
+  "keywords": [
+    "scraper",
+    "movies",
+    "filmyfly",
+    "node"
+  ],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "@distube/ytdl-core": "^4.16.12",
-    "axios": "^1.10.0",
-    "cheerio": "^1.1.0",
-    "express": "^5.1.0",
-    "node-fetch": "^2.7.0",
-    "playwright": "^1.54.1",
-    "puppeteer": "^24.14.0",
-    "undici": "^6.11.0",
-    "youtubei.js": "^14.0.0"
+    "axios": "^1.7.7",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^23.4.1"
   }
 }
+
+
