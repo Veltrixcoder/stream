@@ -4,7 +4,7 @@
   "description": "Node server to scrape trending movies from filmyfly.navy and return JSON",
   "main": "main.js",
   "scripts": {
-    "start": "node \"/Users/shashwat/Desktop/New folder/main.js\""
+    "start": "node main.js"
   },
   "keywords": [
     "scraper",
