@@ -218,7 +218,7 @@ const openapiSpec = {
         description: 'Endpoints to scrape FilmyFly and resolve stream URLs.'
     },
     servers: [
-        { url: 'https://abcd.com', description: 'Production' },
+        { url: 'http://34.171.138.150:3000', description: 'Production' },
         { url: 'http://localhost:3000', description: 'Local' }
     ],
     paths: {
