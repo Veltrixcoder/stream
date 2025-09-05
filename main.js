@@ -2,6 +2,7 @@ const express = require('express');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const swaggerUi = require('swagger-ui-express');
+const { execFile } = require('child_process');
 
 const ORIGIN = 'https://filmyfly.navy';
 
@@ -44,6 +45,40 @@ async function fetchWithPuppeteer(url, options = {}) {
     } finally {
         await page.close();
     }
+}
+
+// Fetch HTML using system curl (follows redirects)
+async function fetchWithCurl(url, options = {}) {
+    const timeoutMs = options.timeout || 20000;
+    const timeoutSec = Math.ceil(timeoutMs / 1000);
+    const headers = options.headers || {};
+    const args = [
+        '-sSL',
+        '--max-redirs', '5',
+        '--compressed',
+        '-m', String(timeoutSec),
+        '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36',
+    ];
+    for (const [k, v] of Object.entries(headers)) {
+        args.push('-H', `${k}: ${v}`);
+    }
+    // Emit final URL after body
+    args.push('-w', '\n-----URL_EFFECTIVE:%{url_effective}-----');
+    args.push(url);
+
+    return new Promise((resolve, reject) => {
+        execFile('curl', args, { maxBuffer: 5 * 1024 * 1024 }, (err, stdout, stderr) => {
+            if (err) return reject(err);
+            const marker = '\n-----URL_EFFECTIVE:';
+            const idx = stdout.lastIndexOf(marker);
+            if (idx === -1) return resolve({ html: stdout, url });
+            const html = stdout.slice(0, idx);
+            const tail = stdout.slice(idx + marker.length);
+            const endIdx = tail.indexOf('-----');
+            const finalUrl = endIdx >= 0 ? tail.slice(0, endIdx) : url;
+            resolve({ html, url: finalUrl.trim() });
+        });
+    });
 }
 
 function htmlDecode(text) {
@@ -267,14 +302,39 @@ app.get('/home', async (_req, res) => {
 
 // Search endpoint: GET /search?q=QUERY
 async function fetchSearchHtml(query) {
-    const url = `${ORIGIN}/site-1.html?to-search=${encodeURIComponent(query)}`;
-    const { html, url: finalUrl } = await fetchWithPuppeteer(url, { timeout: 20000 }); // follows redirects
-    return { url: finalUrl, html };
+    const candidates = [
+        `${ORIGIN}/site-1.html?to-search=${encodeURIComponent(query)}`,
+        `${ORIGIN}/?to-search=${encodeURIComponent(query)}`,
+        `${ORIGIN}/search?to-search=${encodeURIComponent(query)}`
+    ];
+    let last = null;
+    for (const url of candidates) {
+        try {
+            const r = await fetchWithCurl(url, { timeout: 20000 });
+            // If response contains any download links, return it immediately
+            if (/\bhref\s*=\s*"\/page-download\//i.test(r.html)) return { url: r.url, html: r.html };
+            last = r;
+        } catch (_) {}
+    }
+    if (last) return { url: last.url, html: last.html };
+    // Fallback to first candidate
+    const r = await fetchWithCurl(candidates[0], { timeout: 20000 });
+    return { url: r.url, html: r.html };
 }
 
 function parseSearchResults(html) {
     const $ = cheerio.load(html);
     const items = [];
+
+    function pushItem(title, thumb, href) {
+        const downloadPage = toDownloadShortPath(htmlDecode(href || ''));
+        const titleClean = htmlDecode((title || '').replace(/\s+/g, ' ').trim());
+        const thumbClean = htmlDecode(thumb || '');
+        if (!downloadPage || !titleClean) return;
+        items.push({ title: titleClean, thumbnail: thumbClean, downloadPage });
+    }
+
+    // Pattern 1: Original blocks with class .A2
     $('.A2').each((_, el) => {
         const scope = $(el);
         const links = scope.find('a[href^="/page-download/"]');
@@ -282,16 +342,47 @@ function parseSearchResults(html) {
         const firstLink = links.eq(0);
         const secondLink = links.eq(1);
         const href = (secondLink.attr('href') || firstLink.attr('href') || '').trim();
-        if (!href) return;
-        const titleText = (secondLink.text() || firstLink.text() || '').replace(/\s+/g, ' ').trim();
+        const titleText = (secondLink.text() || firstLink.text() || scope.text() || '').trim();
         const imgSrc = scope.find('img').first().attr('src') || '';
-        items.push({
-            title: htmlDecode(titleText),
-            thumbnail: htmlDecode(imgSrc),
-            downloadPage: toDownloadShortPath(htmlDecode(href))
-        });
+        pushItem(titleText, imgSrc, href);
     });
-    return items;
+
+    // Pattern 2: Card blocks similar to home page .A10
+    $('.A10').each((_, block) => {
+        const b = $(block);
+        const img = b.find('img').first();
+        const thumbnail = img.attr('src') || '';
+        const link = b.find('a[href^="/page-download/"]').first();
+        const href = link.attr('href') || '';
+        let title = b.find('div[style*="font-weight:bold"]').first().text().trim();
+        if (!title) title = link.text().trim();
+        pushItem(title, thumbnail, href);
+    });
+
+    // Pattern 3: Fallback - any anchor to /page-download/
+    if (items.length === 0) {
+        $('a[href^="/page-download/"]').each((_, a) => {
+            const link = $(a);
+            const href = link.attr('href') || '';
+            // Try to find a reasonable title near the link
+            let title = link.text().trim();
+            if (!title) title = link.closest('div,li,article,section').first().text().trim();
+            // Try to find a nearby image
+            const img = link.closest('div,li,article,section').find('img').first();
+            const thumbnail = img.attr('src') || '';
+            pushItem(title, thumbnail, href);
+        });
+    }
+
+    // Deduplicate by downloadPage
+    const seen = new Set();
+    const dedup = [];
+    for (const it of items) {
+        if (seen.has(it.downloadPage)) continue;
+        seen.add(it.downloadPage);
+        dedup.push(it);
+    }
+    return dedup;
 }
 
 app.get('/search', async (req, res) => {
@@ -300,7 +391,7 @@ app.get('/search', async (req, res) => {
         if (!q) return res.status(400).json({ error: 'q required' });
         const { url, html } = await fetchSearchHtml(q);
         const items = parseSearchResults(html);
-        res.json({ source: url, query: q, count: items.length, items });
+        res.json({ source: ORIGIN, query: q, count: items.length, items });
     } catch (err) {
         res.status(500).json({ error: err.message || 'Internal Server Error' });
     }
@@ -438,16 +529,16 @@ app.get('/streams/*', async (req, res) => {
         const shortPath = (req.params[0] || '').replace(/^\/+/, '');
         if (!shortPath) return res.status(400).json({ error: 'download page path required' });
 
-        // 1) Open the site download page (Puppeteer follows redirects)
+        // 1) Open the site download page (curl follows redirects)
         const downloadUrl = `${ORIGIN}/page-download/${encodeURI(shortPath)}`;
-        const { html: downloadHtml } = await fetchWithPuppeteer(downloadUrl, { timeout: 15000 });
+        const { html: downloadHtml } = await fetchWithCurl(downloadUrl, { timeout: 15000 });
 
         // 2) Extract intermediate link (e.g., linkmake.in)
         const interUrl = parseIntermediateLinkFromDownloadPage(downloadHtml);
         if (!interUrl) return res.status(404).json({ error: 'intermediate link not found' });
 
         // 3) Open intermediate link page
-        const { html: protectorHtml } = await fetchWithPuppeteer(interUrl, { timeout: 15000 });
+        const { html: protectorHtml } = await fetchWithCurl(interUrl, { timeout: 15000 });
 
         // 4) Extract streams (ids and qualities)
         const streams = parseStreamsFromProtector(protectorHtml);
