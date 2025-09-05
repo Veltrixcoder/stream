@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 const swaggerUi = require('swagger-ui-express');
 const { execFile } = require('child_process');
 
-const ORIGIN = 'https://filmyfly.navy';
+const ORIGIN = 'https://filmyfly.dog';
 
 // Shared browser instance for better performance
 let browser = null;
