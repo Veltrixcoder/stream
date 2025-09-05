@@ -137,6 +137,15 @@ function absoluteUrl(href) {
     return ORIGIN + '/' + href;
 }
 
+// Resolve against a dynamic base URL (handles redirects/domains)
+function resolveUrl(href, baseUrl) {
+    try {
+        return new URL(href, baseUrl).href;
+    } catch (_) {
+        return href || '';
+    }
+}
+
 function toDownloadShortPath(href) {
     if (!href) return '';
     // Expect format: /page-download/<short>
@@ -145,11 +154,11 @@ function toDownloadShortPath(href) {
 }
 
 async function fetchHomeHtml() {
-    const { html } = await fetchWithPuppeteer(ORIGIN, { timeout: 15000 });
-    return html;
+    const { html, url } = await fetchWithPuppeteer(ORIGIN, { timeout: 15000 });
+    return { html, baseUrl: url };
 }
 
-function scrapeSection($, headerRegex, nextHeaderStopRegex) {
+function scrapeSection($, headerRegex, nextHeaderStopRegex, baseUrl) {
     // Find header h2 matching headerRegex
     const header = $('h2').filter((_, el) => headerRegex.test($(el).text())).first();
     if (!header.length) return [];
@@ -167,14 +176,14 @@ function scrapeSection($, headerRegex, nextHeaderStopRegex) {
         const b = $(block);
         const img = b.find('img').first();
         const thumbnail = img.attr('src') || '';
-        const link = b.find('a[href^="/page-download/"]').first();
+        const link = b.find('a[href^="/page-download/"], a[href*="/page-download/"]').first();
         const downloadHref = link.attr('href') || '';
         let title = b.find('div[style*="font-weight:bold"]').first().text().trim();
         if (!title) title = link.text().trim();
         const item = {
             title: htmlDecode(title),
             thumbnail: htmlDecode(thumbnail),
-            downloadPage: toDownloadShortPath(htmlDecode(downloadHref))
+            downloadPage: resolveUrl(htmlDecode(downloadHref), baseUrl)
         };
         if (item.thumbnail && item.downloadPage && item.title) items.push(item);
     });
@@ -182,16 +191,16 @@ function scrapeSection($, headerRegex, nextHeaderStopRegex) {
 }
 
 async function scrapeTrending() {
-    const html = await fetchHomeHtml();
+    const { html, baseUrl } = await fetchHomeHtml();
     const $ = cheerio.load(html);
-    return scrapeSection($, /treding\s*movies/i, /latest\s*movies/i);
+    return scrapeSection($, /treding\s*movies/i, /latest\s*movies/i, baseUrl);
 }
 
 async function scrapeLatest() {
-    const html = await fetchHomeHtml();
+    const { html, baseUrl } = await fetchHomeHtml();
     const $ = cheerio.load(html);
     // Stop when the next h2 appears (e.g., Select Category)
-    return scrapeSection($, /latest\s*movies/i, /.*/i);
+    return scrapeSection($, /latest\s*movies/i, /.*/i, baseUrl);
 }
 
 const app = express();
@@ -281,11 +290,11 @@ const openapiSpec = {
                 responses: { '200': { description: 'HLS data' }, '404': { description: 'Not found' } }
             }
         },
-        '/streams/{downloadPage}': {
+        '/streams': {
             get: {
-                summary: 'Resolve all downloadable streams from a download page path',
+                summary: 'Resolve all downloadable streams from a full download page URL',
                 parameters: [
-                    { in: 'path', name: 'downloadPage', schema: { type: 'string' }, required: true, description: 'Path after /page-download/, accept wildcards' }
+                    { in: 'query', name: 'url', schema: { type: 'string' }, required: true, description: 'Full download page URL (e.g., https://filmyfly.navy/page-download/...)' }
                 ],
                 responses: { '200': { description: 'Resolved streams' } }
             }
@@ -328,11 +337,11 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec, { explorer: true 
 
 app.get('/home', async (_req, res) => {
     try {
-        const html = await fetchHomeHtml();
+        const { html, baseUrl } = await fetchHomeHtml();
         const $ = cheerio.load(html);
-        const trending = scrapeSection($, /treding\s*movies/i, /latest\s*movies/i);
-        const latest = scrapeSection($, /latest\s*movies/i, /.*/i);
-        res.json({ source: ORIGIN, trending: { count: trending.length, items: trending }, latest: { count: latest.length, items: latest } });
+        const trending = scrapeSection($, /treding\s*movies/i, /latest\s*movies/i, baseUrl);
+        const latest = scrapeSection($, /latest\s*movies/i, /.*/i, baseUrl);
+        res.json({ source: baseUrl, trending: { count: trending.length, items: trending }, latest: { count: latest.length, items: latest } });
     } catch (err) {
         res.status(500).json({ error: err.message || 'Internal Server Error' });
     }
@@ -364,8 +373,8 @@ function parseSearchResults(html) {
     const $ = cheerio.load(html);
     const items = [];
 
-    function pushItem(title, thumb, href) {
-        const downloadPage = toDownloadShortPath(htmlDecode(href || ''));
+    function pushItem(title, thumb, href, baseUrl) {
+        const downloadPage = resolveUrl(htmlDecode(href || ''), baseUrl);
         const titleClean = htmlDecode((title || '').replace(/\s+/g, ' ').trim());
         const thumbClean = htmlDecode(thumb || '');
         if (!downloadPage || !titleClean) return;
@@ -382,7 +391,8 @@ function parseSearchResults(html) {
         const href = (secondLink.attr('href') || firstLink.attr('href') || '').trim();
         const titleText = (secondLink.text() || firstLink.text() || scope.text() || '').trim();
         const imgSrc = scope.find('img').first().attr('src') || '';
-        pushItem(titleText, imgSrc, href);
+        const base = $('base').attr('href') || ORIGIN;
+        pushItem(titleText, imgSrc, href, base);
     });
 
     // Pattern 2: Card blocks similar to home page .A10
@@ -394,7 +404,8 @@ function parseSearchResults(html) {
         const href = link.attr('href') || '';
         let title = b.find('div[style*="font-weight:bold"]').first().text().trim();
         if (!title) title = link.text().trim();
-        pushItem(title, thumbnail, href);
+        const base = $('base').attr('href') || ORIGIN;
+        pushItem(title, thumbnail, href, base);
     });
 
     // Pattern 3: Fallback - any anchor to /page-download/
@@ -408,7 +419,8 @@ function parseSearchResults(html) {
             // Try to find a nearby image
             const img = link.closest('div,li,article,section').find('img').first();
             const thumbnail = img.attr('src') || '';
-            pushItem(title, thumbnail, href);
+            const base = $('base').attr('href') || ORIGIN;
+            pushItem(title, thumbnail, href, base);
         });
     }
 
@@ -542,8 +554,28 @@ app.get('/hlstr/:id', async (req, res) => {
 // Parse the site download page (like down.html) to get the intermediate link (Linkmake or similar)
 function parseIntermediateLinkFromDownloadPage(html) {
     const $ = cheerio.load(html);
-    const link = $('.dlbtn a.dl').first().attr('href') || '';
-    return link;
+    // Prefer explicit link button
+    let href = $('.dlbtn a.dl').first().attr('href') || '';
+    if (href) return href;
+    // Fallback: any anchor to external protector
+    const protectorSel = [
+        'a[href*="linkmake"]',
+        'a[href*="linksly"]',
+        'a[href*="linkhub"]',
+        'a[href*="short"]',
+        'a[href*="/det.html"]',
+        'a[href*="/detail.html"]'
+    ].join(',');
+    href = $(protectorSel).first().attr('href') || '';
+    if (href) return href;
+    // As last resort, any offsite link
+    const offsite = $('a[href]').map((_, a) => $(a).attr('href') || '').get().find((u) => {
+        try {
+            const url = new URL(u, ORIGIN);
+            return !url.href.startsWith(ORIGIN) && /https?:/i.test(url.href);
+        } catch { return false; }
+    });
+    return offsite || '';
 }
 
 // Parse the protector page (like det.html) to get all streams with ids and qualities
@@ -562,13 +594,13 @@ function parseStreamsFromProtector(html) {
     return streams;
 }
 
-app.get('/streams/*', async (req, res) => {
+// New streams endpoint expects full download page URL in query (?url=...)
+app.get('/streams', async (req, res) => {
     try {
-        const shortPath = (req.params[0] || '').replace(/^\/+/, '');
-        if (!shortPath) return res.status(400).json({ error: 'download page path required' });
+        const downloadUrl = (req.query.url || '').toString().trim();
+        if (!downloadUrl) return res.status(400).json({ error: 'url required (full download page url)' });
 
         // 1) Open the site download page (curl follows redirects)
-        const downloadUrl = `${ORIGIN}/page-download/${encodeURI(shortPath)}`;
         const { html: downloadHtml } = await fetchWithCurl(downloadUrl, { timeout: 15000 });
 
         // 2) Extract intermediate link (e.g., linkmake.in)
@@ -593,7 +625,7 @@ app.get('/streams/*', async (req, res) => {
         );
 
         const filtered = resolved.filter(Boolean);
-        res.json({ source: ORIGIN, downloadPage: shortPath, intermediate: interUrl, count: filtered.length, streams: filtered });
+        res.json({ source: ORIGIN, downloadPage: downloadUrl, intermediate: interUrl, count: filtered.length, streams: filtered });
     } catch (err) {
         res.status(500).json({ error: err.message || 'Internal Server Error' });
     }
