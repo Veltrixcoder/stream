@@ -268,7 +268,7 @@ app.get('/home', async (_req, res) => {
 // Search endpoint: GET /search?q=QUERY
 async function fetchSearchHtml(query) {
     const url = `${ORIGIN}/site-1.html?to-search=${encodeURIComponent(query)}`;
-    const { html, url: finalUrl } = await fetchWithPuppeteer(url, { timeout: 20000 });
+    const { html, url: finalUrl } = await fetchWithPuppeteer(url, { timeout: 20000 }); // follows redirects
     return { url: finalUrl, html };
 }
 
@@ -438,7 +438,7 @@ app.get('/streams/*', async (req, res) => {
         const shortPath = (req.params[0] || '').replace(/^\/+/, '');
         if (!shortPath) return res.status(400).json({ error: 'download page path required' });
 
-        // 1) Open the site download page
+        // 1) Open the site download page (Puppeteer follows redirects)
         const downloadUrl = `${ORIGIN}/page-download/${encodeURI(shortPath)}`;
         const { html: downloadHtml } = await fetchWithPuppeteer(downloadUrl, { timeout: 15000 });
 
