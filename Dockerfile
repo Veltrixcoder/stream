@@ -1,5 +1,5 @@
 # Node + Puppeteer (Chromium) runtime
-FROM node:20-bookworm-slim
+FROM node:20-slim
 
 # Install Chromium dependencies
 RUN apt-get update && apt-get install -y \
@@ -33,18 +33,20 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
   && rm -rf /var/lib/apt/lists/*
 
+# Puppeteer environment variables
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
     PUPPETEER_SKIP_DOWNLOAD=true \
     NODE_ENV=production
 
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --only=production
 
+# Copy app source
 COPY . .
 
 EXPOSE 3000
+
 CMD ["npm", "start"]
-
-
