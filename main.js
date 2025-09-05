@@ -81,6 +81,44 @@ async function fetchWithCurl(url, options = {}) {
     });
 }
 
+// Fetch only headers using curl -I (HEAD), optionally with custom headers
+async function fetchHeadersWithCurl(url, options = {}) {
+    const timeoutMs = options.timeout || 15000;
+    const timeoutSec = Math.ceil(timeoutMs / 1000);
+    const headers = options.headers || {};
+    const args = [
+        '-sSI',
+        '--max-redirs', '5',
+        '--compressed',
+        '-m', String(timeoutSec),
+        '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36',
+        '-D', '-',
+    ];
+    for (const [k, v] of Object.entries(headers)) {
+        args.push('-H', `${k}: ${v}`);
+    }
+    args.push(url);
+
+    return new Promise((resolve, reject) => {
+        execFile('curl', args, { maxBuffer: 512 * 1024 }, (err, stdout) => {
+            if (err) return reject(err);
+            const headerLines = stdout.split(/\r?\n/).filter(Boolean);
+            const statusLine = headerLines[0] || '';
+            const statusMatch = statusLine.match(/\s(\d{3})\s/);
+            const status = statusMatch ? parseInt(statusMatch[1], 10) : 0;
+            const headersObj = {};
+            for (const line of headerLines.slice(1)) {
+                const idx = line.indexOf(':');
+                if (idx === -1) continue;
+                const key = line.slice(0, idx).trim().toLowerCase();
+                const val = line.slice(idx + 1).trim();
+                headersObj[key] = val;
+            }
+            resolve({ status, headers: headersObj });
+        });
+    });
+}
+
 function htmlDecode(text) {
     if (!text) return '';
     return text
@@ -596,38 +634,26 @@ async function resolveStreamById(id) {
 // Validate that a final stream URL is actually retrievable (avoid dead/error links)
 async function isValidStreamUrl(url) {
     try {
-        const browser = await getBrowser();
-        const page = await browser.newPage();
-        
-        try {
-            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
-            await page.setExtraHTTPHeaders({ 'Range': 'bytes=0-0' });
-            
-            const response = await page.goto(url, { 
-                waitUntil: 'domcontentloaded', 
-                timeout: 20000 
-            });
-            
-            if (!response.ok()) return false;
-            
-            const ct = response.headers()['content-type'] || '';
-            if (ct.toLowerCase().includes('text/html')) {
-                const content = await page.content();
-                if (/failed\s*to\s*get\s*direct\s*url/i.test(content)) return false;
-                return false;
-            }
-            return true;
-        } finally {
-            await page.close();
-        }
-    } catch (_) {
-        return false;
-    }
+        const head = await fetchHeadersWithCurl(url, {
+            timeout: 15000,
+            headers: { 'Range': 'bytes=0-0' }
+        });
+        if (head.status < 200 || head.status >= 400) return false;
+        const ct = (head.headers['content-type'] || '').toLowerCase();
+        if (ct && !ct.includes('text/html')) return true;
+    } catch (_) {}
+    // fallback: GET a byte
+    try {
+        const r = await fetchWithCurl(url, { timeout: 20000, headers: { 'Range': 'bytes=0-0' } });
+        // If we get any non-HTML response body, consider it valid
+        if (!/<!DOCTYPE|<html/i.test(r.html)) return true;
+    } catch (_) {}
+    return false;
 }
 
 // Helper to fetch with UA and timeout
 async function fetchPage(url) {
-    const { html } = await fetchWithPuppeteer(url, { timeout: 15000 });
+    const { html } = await fetchWithCurl(url, { timeout: 15000 });
     return html;
 }
 
