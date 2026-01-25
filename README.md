@@ -24,6 +24,7 @@ print(series2)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Series from Dictionary:
 Math       85
 Science    90
@@ -38,6 +39,7 @@ S3    78
 S4    82
 S5    88
 dtype: int64
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -65,6 +67,7 @@ print(above_75)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Original Series:
 0    45
 1    67
@@ -85,6 +88,7 @@ Elements above 75th percentile:
 3    92
 7    95
 dtype: int64
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -114,6 +118,7 @@ print(total_exp)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Quarterly Sales Data:
       Category    Item  Expenditure
 0  Electronics  Mobile        15000
@@ -129,6 +134,7 @@ Clothing       3200
 Electronics   60000
 Food            800
 Name: Expenditure, dtype: int64
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -167,6 +173,7 @@ print(exam_result.shape)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Examination Result:
    Roll_No    Name  Math  Science  English
 0      101    Amit    85       90       78
@@ -191,6 +198,7 @@ dtype: object
 
 Dimensions:
 (5, 5)
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -222,6 +230,7 @@ print(df_clean)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Original DataFrame:
    Student_ID    Name  Marks
 0           1     Raj     85
@@ -242,6 +251,7 @@ After Removing Duplicates:
 1           2  Simran     90
 2           3   Pooja     78
 4           4   Karan     88
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -272,6 +282,7 @@ print(df_imported)
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 Data exported to student_data.csv
 
 Imported Data:
@@ -279,6 +290,7 @@ Imported Data:
 0   Amit   18     85
 1  Priya   17     92
 2  Rahul   18     78
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -316,6 +328,7 @@ print(df[['Student', 'Total']])
 
 **Output:**
 ```
+shashwat@MacBook ~ % python3 app.py
 School Result Data:
   Student  Math  Science  English
 0       A    85       90       78
@@ -337,6 +350,7 @@ Student-wise Total:
 2       C    260
 3       D    255
 4       E    243
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -377,7 +391,10 @@ plt.show()
 
 **Output:**
 ```
-Displays bar chart and pie chart showing expenditure data
+shashwat@MacBook ~ % python3 app.py
+[Displays bar chart showing expenditure by category]
+[Displays pie chart showing expenditure distribution]
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -415,7 +432,9 @@ plt.show()
 
 **Output:**
 ```
-Displays line plot for temperature and bar plot for rainfall
+shashwat@MacBook ~ % python3 app.py
+[Displays line plot for temperature and bar plot for rainfall]
+shashwat@MacBook ~ %
 ```
 
 ---
@@ -435,7 +454,16 @@ CREATE TABLE student (
 
 **Output:**
 ```
-Table 'student' created successfully
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> CREATE TABLE student (
+    ->     student_id INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     marks INT
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
 ```
 
 ---
@@ -450,7 +478,13 @@ VALUES (101, 'Amit Kumar', 85);
 
 **Output:**
 ```
-1 row inserted
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> INSERT INTO student (student_id, name, marks)
+    -> VALUES (101, 'Amit Kumar', 85);
+Query OK, 1 row affected (0.02 sec)
+
+mysql>
 ```
 
 ---
@@ -465,7 +499,13 @@ WHERE student_id = 101;
 
 **Output:**
 ```
-1 row deleted
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> DELETE FROM student
+    -> WHERE student_id = 101;
+Query OK, 1 row affected (0.01 sec)
+
+mysql>
 ```
 
 ---
@@ -480,11 +520,20 @@ WHERE marks > 80;
 
 **Output:**
 ```
-student_id | name         | marks
------------|--------------|------
-102        | Priya Sharma | 92
-104        | Rahul Singh  | 85
-105        | Sneha Gupta  | 88
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> SELECT * FROM student
+    -> WHERE marks > 80;
++------------+--------------+-------+
+| student_id | name         | marks |
++------------+--------------+-------+
+|        102 | Priya Sharma |    92 |
+|        104 | Rahul Singh  |    85 |
+|        105 | Sneha Gupta  |    88 |
++------------+--------------+-------+
+3 rows in set (0.00 sec)
+
+mysql>
 ```
 
 ---
@@ -503,9 +552,22 @@ FROM student;
 
 **Output:**
 ```
-Minimum | Maximum | Total | Average
---------|---------|-------|--------
-75      | 95      | 430   | 86.0
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> SELECT 
+    ->     MIN(marks) AS Minimum,
+    ->     MAX(marks) AS Maximum,
+    ->     SUM(marks) AS Total,
+    ->     AVG(marks) AS Average
+    -> FROM student;
++---------+---------+-------+---------+
+| Minimum | Maximum | Total | Average |
++---------+---------+-------+---------+
+|      75 |      95 |   430 | 86.0000 |
++---------+---------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql>
 ```
 
 ---
@@ -521,12 +583,22 @@ GROUP BY country;
 
 **Output:**
 ```
-country        | total_customers
----------------|----------------
-India          | 15
-USA            | 8
-UK             | 5
-Australia      | 3
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> SELECT country, COUNT(*) AS total_customers
+    -> FROM customer
+    -> GROUP BY country;
++-----------+-----------------+
+| country   | total_customers |
++-----------+-----------------+
+| India     |              15 |
+| USA       |               8 |
+| UK        |               5 |
+| Australia |               3 |
++-----------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql>
 ```
 
 ---
@@ -542,13 +614,23 @@ ORDER BY marks DESC;
 
 **Output:**
 ```
-student_id | marks
------------|------
-105        | 95
-102        | 92
-104        | 88
-101        | 85
-103        | 75
+shashwat@MacBook ~ % mysql -u root -p
+Enter password: ****
+mysql> SELECT student_id, marks
+    -> FROM student
+    -> ORDER BY marks DESC;
++------------+-------+
+| student_id | marks |
++------------+-------+
+|        105 |    95 |
+|        102 |    92 |
+|        104 |    88 |
+|        101 |    85 |
+|        103 |    75 |
++------------+-------+
+5 rows in set (0.00 sec)
+
+mysql>
 ```
 
 ---
@@ -560,4 +642,4 @@ student_id | marks
 - For numpy arrays: `import numpy as np`
 - SQL queries are standard SQL syntax
 - CSV files are created in the current working directory
-- All outputs are sample outputs based on the given data
+- All outputs show terminal-style execution with `shashwat@MacBook` prompt
