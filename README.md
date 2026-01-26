@@ -24,7 +24,7 @@ print(series2)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Series from Dictionary:
 Math       85
 Science    90
@@ -39,7 +39,7 @@ S3    78
 S4    82
 S5    88
 dtype: int64
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -67,7 +67,7 @@ print(above_75)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Original Series:
 0    45
 1    67
@@ -88,7 +88,7 @@ Elements above 75th percentile:
 3    92
 7    95
 dtype: int64
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -118,7 +118,7 @@ print(total_exp)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Quarterly Sales Data:
       Category    Item  Expenditure
 0  Electronics  Mobile        15000
@@ -134,7 +134,7 @@ Clothing       3200
 Electronics   60000
 Food            800
 Name: Expenditure, dtype: int64
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -173,7 +173,7 @@ print(exam_result.shape)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Examination Result:
    Roll_No    Name  Math  Science  English
 0      101    Amit    85       90       78
@@ -198,7 +198,7 @@ dtype: object
 
 Dimensions:
 (5, 5)
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -230,7 +230,7 @@ print(df_clean)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Original DataFrame:
    Student_ID    Name  Marks
 0           1     Raj     85
@@ -251,7 +251,7 @@ After Removing Duplicates:
 1           2  Simran     90
 2           3   Pooja     78
 4           4   Karan     88
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -282,7 +282,7 @@ print(df_imported)
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 Data exported to student_data.csv
 
 Imported Data:
@@ -290,7 +290,7 @@ Imported Data:
 0   Amit   18     85
 1  Priya   17     92
 2  Rahul   18     78
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -328,7 +328,7 @@ print(df[['Student', 'Total']])
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 School Result Data:
   Student  Math  Science  English
 0       A    85       90       78
@@ -350,7 +350,7 @@ Student-wise Total:
 2       C    260
 3       D    255
 4       E    243
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -391,10 +391,10 @@ plt.show()
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 [Displays bar chart showing expenditure by category]
 [Displays pie chart showing expenditure distribution]
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -432,9 +432,9 @@ plt.show()
 
 **Output:**
 ```
-shashwat@MacBook ~ % python3 app.py
+shivansh@ubuntu ~ % python3 app.py
 [Displays line plot for temperature and bar plot for rainfall]
-shashwat@MacBook ~ %
+shivansh@ubuntu ~ %
 ```
 
 ---
@@ -454,7 +454,7 @@ CREATE TABLE student (
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> CREATE TABLE student (
     ->     student_id INT PRIMARY KEY,
@@ -478,7 +478,7 @@ VALUES (101, 'Amit Kumar', 85);
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> INSERT INTO student (student_id, name, marks)
     -> VALUES (101, 'Amit Kumar', 85);
@@ -499,7 +499,7 @@ WHERE student_id = 101;
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> DELETE FROM student
     -> WHERE student_id = 101;
@@ -520,7 +520,7 @@ WHERE marks > 80;
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> SELECT * FROM student
     -> WHERE marks > 80;
@@ -552,7 +552,7 @@ FROM student;
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> SELECT 
     ->     MIN(marks) AS Minimum,
@@ -583,7 +583,7 @@ GROUP BY country;
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> SELECT country, COUNT(*) AS total_customers
     -> FROM customer
@@ -614,7 +614,7 @@ ORDER BY marks DESC;
 
 **Output:**
 ```
-shashwat@MacBook ~ % mysql -u root -p
+shivansh@ubuntu ~ % mysql -u root -p
 Enter password: ****
 mysql> SELECT student_id, marks
     -> FROM student
@@ -642,4 +642,4 @@ mysql>
 - For numpy arrays: `import numpy as np`
 - SQL queries are standard SQL syntax
 - CSV files are created in the current working directory
-- All outputs show terminal-style execution with `shashwat@MacBook` prompt
+- All outputs show terminal-style execution with `shivansh@ubuntu` prompt
