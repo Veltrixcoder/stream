@@ -1,61 +1,95 @@
 .section {
-  margin-bottom: 4.5rem;
+  margin-bottom: 3.5rem;
   animation: fadeIn 0.8s ease forwards;
 }
 
-.title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
-  position: relative;
+.header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #fff;
-  letter-spacing: -0.5px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
 }
 
-.title::before {
-  content: '';
+.iconWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.indicator {
   width: 5px;
   height: 24px;
   background: var(--primary);
   border-radius: 4px;
-  box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2rem;
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin: 0;
+  white-space: nowrap;
 }
 
-@media (max-width: 1200px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
+.line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+}
+
+.slider {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.track {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1rem 0.5rem; /* Space for hover expansion */
+}
+
+.item {
+  flex-shrink: 0;
+  width: 220px; /* Base width */
+}
+
+@media (max-width: 1024px) {
+  .item {
+    width: 180px;
   }
 }
 
 @media (max-width: 768px) {
   .section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .header {
+    margin-bottom: 1.25rem;
   }
   
   .title {
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
   }
   
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+  .item {
+    width: 140px;
   }
-}
-
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
+  
+  .track {
+    gap: 0.75rem;
   }
 }

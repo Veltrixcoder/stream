@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Home, Film, Tv, Settings } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
@@ -10,41 +13,73 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const pathname = usePathname();
+
   return (
     <>
-      {/* Desktop Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.top}>
           <Link href="/" className={styles.logo}>
-            <Image src="/logo.png" alt="Streamflix" width={180} height={40} className={styles.logoImg} priority />
+            <Image 
+               src="/logo.png" 
+               alt="Streamflix" 
+               width={180} 
+               height={40} 
+               className={styles.logoImg} 
+               priority 
+               onError={(e) => {
+                 // Fallback if logo is missing
+                 const target = e.target as HTMLImageElement;
+                 target.style.display = 'none';
+               }}
+            />
           </Link>
         </div>
         
         <nav className={styles.nav}>
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className={styles.navLink}>
-              <span className={styles.icon}>{item.icon}</span>
-              <span className={styles.label}>{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+              >
+                <span className={styles.icon}>{item.icon}</span>
+                <span className={styles.label}>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
         
         <div className={styles.bottom}>
-          <Link href="/config" className={styles.navLink}>
+          <Link 
+            href="/config" 
+            className={`${styles.navLink} ${pathname === '/config' ? styles.active : ''}`}
+          >
             <span className={styles.icon}><Settings size={22} /></span>
             <span className={styles.label}>Config</span>
           </Link>
         </div>
       </aside>
 
-      {/* Mobile Floating Navbar */}
       <div className={styles.mobileNav}>
-        {navItems.map((item) => (
-          <Link key={item.href} href={item.href} className={styles.mobileNavLink}>
-            {item.icon}
-          </Link>
-        ))}
-        <Link href="/config" className={styles.mobileNavLink}>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link 
+              key={item.href} 
+              href={item.href} 
+              className={`${styles.mobileNavLink} ${isActive ? styles.active : ''}`}
+            >
+              {item.icon}
+            </Link>
+          );
+        })}
+        <Link 
+          href="/config" 
+          className={`${styles.mobileNavLink} ${pathname === '/config' ? styles.active : ''}`}
+        >
           <Settings size={22} />
         </Link>
       </div>

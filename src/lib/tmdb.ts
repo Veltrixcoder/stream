@@ -42,8 +42,38 @@ export async function getPopularTv() {
   return data.results;
 }
 
+export async function getTopRatedTv() {
+  const data = await fetchFromTMDB<{ results: Media[] }>('/tv/top_rated');
+  return data.results;
+}
+
+export async function getTopRatedMovies() {
+  const data = await fetchFromTMDB<{ results: Media[] }>('/movie/top_rated');
+  return data.results;
+}
+
+export async function getNowPlaying() {
+  const data = await fetchFromTMDB<{ results: Media[] }>('/movie/now_playing');
+  return data.results;
+}
+
+export async function getAnime() {
+  const data = await fetchFromTMDB<{ results: Media[] }>('/discover/tv', { with_genres: '16', with_keywords: '210024|287501' });
+  return data.results;
+}
+
 export async function getDetails(type: 'movie' | 'tv', id: string) {
-  return await fetchFromTMDB<Media>(`/${type}/${id}`);
+  return await fetchFromTMDB<Media & { genres: any[], seasons?: any[], status?: string }>(`/${type}/${id}`);
+}
+
+export async function getCredits(type: 'movie' | 'tv', id: string) {
+  const data = await fetchFromTMDB<{ cast: any[] }>(`/${type}/${id}/credits`);
+  return data.cast;
+}
+
+export async function getRecommendations(type: 'movie' | 'tv', id: string) {
+  const data = await fetchFromTMDB<{ results: Media[] }>(`/${type}/${id}/recommendations`);
+  return data.results;
 }
 
 export async function search(query: string) {
