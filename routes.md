@@ -9,6 +9,7 @@ This document outlines all the configured routes for the Streamflix Next.js appl
 | `/live-tv` | **Live TV Page** - Trending and popular TV shows currently on air. | N/A |
 | `/config` | **Config Page** - User settings and preferences (currently empty). | N/A |
 | `/details/[type]/[id]` | **Media Details** - Shows full details for a movie or TV show. | `type`: 'movie' or 'tv'<br>`id`: TMDB unique ID |
+| `/.well-known/assetlinks.json` | **Android App Links** - Configuration for deep link handling. | N/A |
 
 ## URL Construction Examples
 

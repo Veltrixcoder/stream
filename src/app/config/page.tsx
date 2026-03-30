@@ -2,7 +2,7 @@ import { Settings, ExternalLink, Download } from 'lucide-react';
 import styles from './Config.module.css';
 
 export default function ConfigPage() {
-  const configUrl = "streamfliix://config?base=https://docker-1e4b-7860.prg1.zerops.app/";
+  const configUrl = "https://streamfliix.vercel.app/config?base=https://docker-1e4b-7860.prg1.zerops.app/";
 
   return (
     <div className="fade-in">
