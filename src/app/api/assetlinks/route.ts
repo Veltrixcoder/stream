@@ -9,7 +9,6 @@ export async function GET() {
         package_name: 'com.shashwat.streamflix',
         sha256_cert_fingerprints: [
           'B9:CA:38:92:26:69:94:4D:24:6A:BA:7C:D4:A2:C8:01:D8:F8:D5:62:F3:0D:FA:AA:BF:85:67:33:20:14:ED:05',
-          '6A:7E:EC:63:B0:14:DF:0B:95:03:B6:84:B9:1F:8C:66:19:3F:E0:5B:41:A6:4F:3A:A6:BB:7B:44:3F:57:D7:85',
         ],
       },
     },

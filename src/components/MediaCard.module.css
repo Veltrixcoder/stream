@@ -1,126 +1,107 @@
 .card {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
   overflow: hidden;
-  text-decoration: none;
-  background: var(--surface);
   transition: var(--transition);
-  transform: scale(1);
+  background: var(--surface);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  width: 100%;
+  animation: fadeIn 0.4s ease forwards;
+  position: relative;
 }
 
 .card:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow);
-  z-index: 2;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+  z-index: 10;
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition);
+  transition: transform 0.5s ease;
 }
 
 .card:hover .image {
   transform: scale(1.1);
-}
-
-.topBadges {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  align-items: flex-end;
-  z-index: 2;
-}
-
-.ratingBadge {
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 4px 8px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.soonBadge {
-  background: var(--primary);
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.65rem;
-  font-weight: 900;
-  color: white;
-  letter-spacing: 0.5px;
+  filter: brightness(0.6);
 }
 
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 40%,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
-  opacity: 1;
+  background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 40%, transparent 80%);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.topInfo {
+  display: flex;
   justify-content: flex-end;
-  padding: 16px;
+}
+
+.rating {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffcc00;
 }
 
 .bottomInfo {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.25rem;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.card:hover .bottomInfo {
+  transform: translateY(-5px);
 }
 
 .title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: white;
+  font-size: 1rem;
+  font-weight: 700;
   margin: 0;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.typeTag {
-  font-size: 0.6rem;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 1px;
+  color: #fff;
+  line-height: 1.2;
 }
 
 .year {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  color: var(--foreground-muted);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 0.9rem;
+  }
+  
+  .overlay {
+    padding: 0.75rem;
+  }
 }

@@ -1,27 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #E50914;
-  --primary-dark: #b20710;
-  --background: #0f0f0f;
-  --surface: #1a1a1a;
-  --surface-hover: #262626;
+  --primary: #ff4d4d;
+  --primary-dark: #cc0000;
+  --background: #080808;
+  --surface: #121212;
+  --surface-hover: #1e1e1e;
   --foreground: #ffffff;
-  --foreground-muted: rgba(255, 255, 255, 0.7);
+  --foreground-muted: #a0a0a0;
   --border: rgba(255, 255, 255, 0.08);
-  --glass: rgba(15, 15, 15, 0.85);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --glass: rgba(20, 20, 20, 0.7);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
   
-  --font-main: 'DM Sans', sans-serif;
-  --font-heading: 'DM Serif Display', serif;
-  
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --font-main: 'Inter', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
   
   --sidebar-width: 260px;
   --header-height: 70px;
-  --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
