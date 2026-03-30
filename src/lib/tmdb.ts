@@ -11,6 +11,7 @@ export interface Media {
   release_date?: string;
   first_air_date?: string;
   media_type?: 'movie' | 'tv';
+  status?: string;
 }
 
 export async function fetchFromTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
@@ -63,7 +64,7 @@ export async function getAnime() {
 }
 
 export async function getDetails(type: 'movie' | 'tv', id: string) {
-  return await fetchFromTMDB<Media & { genres: any[], seasons?: any[], status?: string }>(`/${type}/${id}`);
+  return await fetchFromTMDB<Media & { genres: any[], seasons?: any[] }>(`/${type}/${id}`);
 }
 
 export async function getCredits(type: 'movie' | 'tv', id: string) {
