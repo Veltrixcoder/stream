@@ -2,7 +2,7 @@ import { Settings, ExternalLink, Download } from 'lucide-react';
 import styles from './Config.module.css';
 
 export default function ConfigPage() {
-  const configUrl = "https://streamfliix.vercel.app/config?base=https://docker-1e4b-7860.prg1.zerops.app/";
+  const configUrl = "streamfliix://config?base=https://docker-1e4b-7860.prg1.zerops.app/";
 
   return (
     <div className="fade-in">
@@ -15,7 +15,7 @@ export default function ConfigPage() {
         <div className={styles.info}>
           <h2>App Setup</h2>
           <p>
-            Configure your Streamflix instance to connect with the backend services. 
+            Configure your Streamflix instance to connect with the backend services.
             This will synchronize your settings and provide the best streaming experience.
           </p>
         </div>
@@ -34,7 +34,7 @@ export default function ConfigPage() {
             <h3>Get the Streamflix App</h3>
           </div>
           <p>
-            For a better experience, offline viewing, and deep-linking support, we recommend 
+            For a better experience, offline viewing, and deep-linking support, we recommend
             installing the official Streamflix application on your device.
           </p>
           <a href="#" className={styles.installBtn}>
