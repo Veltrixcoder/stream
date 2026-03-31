@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from 'react-router-dom';
 import { Home, Film, Tv, Settings } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
@@ -15,14 +14,14 @@ export default function Sidebar() {
       {/* Desktop Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.top}>
-          <Link href="/" className={styles.logo}>
-            <Image src="/logo.png" alt="Streamflix" width={180} height={40} className={styles.logoImg} priority />
+          <Link to="/" className={styles.logo}>
+            <img src="/logo.png" alt="Streamflix" width={180} height={40} className={styles.logoImg} />
           </Link>
         </div>
         
         <nav className={styles.nav}>
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className={styles.navLink}>
+            <Link key={item.href} to={item.href} className={styles.navLink}>
               <span className={styles.icon}>{item.icon}</span>
               <span className={styles.label}>{item.label}</span>
             </Link>
@@ -30,7 +29,7 @@ export default function Sidebar() {
         </nav>
         
         <div className={styles.bottom}>
-          <Link href="/config" className={styles.navLink}>
+          <Link to="/config" className={styles.navLink}>
             <span className={styles.icon}><Settings size={22} /></span>
             <span className={styles.label}>Config</span>
           </Link>
@@ -40,11 +39,11 @@ export default function Sidebar() {
       {/* Mobile Floating Navbar */}
       <div className={styles.mobileNav}>
         {navItems.map((item) => (
-          <Link key={item.href} href={item.href} className={styles.mobileNavLink}>
+          <Link key={item.href} to={item.href} className={styles.mobileNavLink}>
             {item.icon}
           </Link>
         ))}
-        <Link href="/config" className={styles.mobileNavLink}>
+        <Link to="/config" className={styles.mobileNavLink}>
           <Settings size={22} />
         </Link>
       </div>

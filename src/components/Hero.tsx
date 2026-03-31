@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from 'react-router-dom';
 import { Media, getImageUrl } from '@/lib/tmdb';
 import { Play, Plus } from 'lucide-react';
 import styles from './Hero.module.css';
@@ -18,12 +17,10 @@ export default function Hero({ media }: Props) {
   return (
     <div className={styles.hero}>
       <div className={styles.backdrop}>
-        <Image 
+        <img 
           src={backdrop} 
           alt={title || 'featured'} 
-          fill 
           className={styles.image}
-          priority
         />
         <div className={styles.gradient} />
       </div>
@@ -34,7 +31,7 @@ export default function Hero({ media }: Props) {
         <p className={styles.overview}>{media.overview}</p>
         
         <div className={styles.actions}>
-          <Link href={`/details/${type}/${media.id}`} className={styles.btnPrimary}>
+          <Link to={`/details/${type}/${media.id}`} className={styles.btnPrimary}>
             <Play size={20} fill="currentColor" /> Watch Now
           </Link>
           <button className={styles.btnSecondary}>

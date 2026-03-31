@@ -18,7 +18,7 @@ export async function fetchFromTMDB<T>(endpoint: string, params: Record<string, 
   const url = `${BASE_URL}${endpoint}${queryParams ? `?${queryParams}` : ''}`;
   
   try {
-    const res = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
+    const res = await fetch(url);
     if (!res.ok) throw new Error(`Fetch failed: ${res.statusText}`);
     return res.json();
   } catch (error) {

@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from 'react-router-dom';
 import { Media, getImageUrl } from '@/lib/tmdb';
 import { Star } from 'lucide-react';
 import styles from './MediaCard.module.css';
@@ -13,12 +12,12 @@ export default function MediaCard({ media, type }: Props) {
   const title = media.title || media.name || 'Untitled';
   const year = (media.release_date || media.first_air_date || '').split('-')[0];
   const rating = (media.vote_average || 0).toFixed(1);
-  const href = `/details/${type}/${media.id}`;
+  const to = `/details/${type}/${media.id}`;
 
   return (
-    <Link href={href} className={styles.card}>
+    <Link to={to} className={styles.card}>
       <div className={styles.imageWrapper}>
-        <Image 
+        <img 
           src={getImageUrl(media.poster_path, 'w500') || '/placeholder.png'} 
           alt={title} 
           width={500} 
