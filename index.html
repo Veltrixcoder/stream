@@ -201,6 +201,76 @@
     footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; }
     footer a { color: var(--red); text-decoration: none; }
 
+    /* OLD VERSIONS */
+    .old-versions { margin-top: 40px; }
+    .old-ver-toggle {
+      display: flex; align-items: center; gap: 10px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 3px; padding: 12px 18px; width: 100%;
+      color: var(--text-dim); font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+      font-family: inherit; transition: all 0.16s; text-align: left;
+    }
+    .old-ver-toggle:hover { border-color: var(--border-strong); color: var(--text); }
+    .old-ver-toggle svg { transition: transform 0.2s; flex-shrink: 0; }
+    .old-ver-toggle.open svg.chevron { transform: rotate(180deg); }
+    .old-ver-toggle .spacer { flex: 1; }
+    .old-ver-count {
+      background: var(--surface3); border: 1px solid var(--border);
+      border-radius: 2px; padding: 2px 8px; font-size: 10px;
+      color: var(--text-muted); letter-spacing: 1px;
+    }
+
+    .old-ver-list {
+      display: none; margin-top: 1px;
+      border: 1px solid var(--border); border-radius: 3px; overflow: hidden;
+    }
+    .old-ver-list.open { display: block; }
+
+    .release-row {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .release-row:last-child { border-bottom: none; }
+
+    .release-row-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px; cursor: pointer; transition: background 0.15s;
+    }
+    .release-row-header:hover { background: var(--surface2); }
+    .release-row-tag { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1.5px; color: var(--text); }
+    .release-row-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px; }
+    .release-row-header .spacer { flex: 1; }
+    .release-row-chevron { color: var(--text-muted); transition: transform 0.18s; flex-shrink: 0; }
+    .release-row.expanded .release-row-chevron { transform: rotate(180deg); }
+
+    .release-assets {
+      display: none;
+      padding: 0 18px 16px;
+      gap: 8px; flex-direction: column;
+    }
+    .release-row.expanded .release-assets { display: flex; }
+
+    .asset-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; background: #000;
+      border: 1px solid var(--border); border-radius: 2px;
+      transition: border-color 0.15s;
+    }
+    .asset-row:hover { border-color: var(--border-strong); }
+    .asset-arch { font-size: 13px; font-weight: 500; color: var(--text); min-width: 110px; }
+    .asset-sub { font-size: 11px; color: var(--text-muted); flex: 1; }
+    .asset-size { font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px; white-space: nowrap; }
+    .asset-dl {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-dim); padding: 7px 14px; border-radius: 2px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
+      text-transform: uppercase; text-decoration: none; white-space: nowrap;
+      transition: all 0.15s; font-family: inherit;
+    }
+    .asset-dl:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
     .divider { border: none; border-top: 1px solid var(--border); }
 
     @media(max-width:768px){
@@ -383,6 +453,20 @@
       <div class="skel" style="height:42px;margin-top:8px;"></div>
     </div>
   </div>
+
+  <!-- OLD VERSIONS -->
+  <div class="old-versions">
+    <button class="old-ver-toggle" id="old-toggle" onclick="toggleOldVersions()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      Previous Releases
+      <div class="spacer"></div>
+      <span class="old-ver-count" id="old-ver-count">—</span>
+      <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="old-ver-list" id="old-ver-list">
+      <div style="padding:32px;text-align:center;color:var(--text-dim);font-size:12px;" id="old-ver-loading">Loading previous releases...</div>
+    </div>
+  </div>
 </div>
 
 <!-- CONFIG BANNER -->
@@ -405,10 +489,10 @@
 
 <script>
 const ARCH_META = {
-  'arm64-v8a':   { label:'arm64-v8a',  sub:'64-bit ARM · Modern Phones',      who:'All Android phones from 2016 onwards — Samsung, Pixel, OnePlus, Xiaomi, Realme, and more.', rec:true  },
-  'armeabi-v7a': { label:'armeabi-v7a',sub:'32-bit ARM · Legacy Phones',       who:'Older or entry-level devices. Use only if arm64-v8a fails to install.', rec:false },
-  'x86_64':      { label:'x86_64',     sub:'64-bit x86 · Emulators',           who:'Android Studio emulators, Genymotion, and some x86-based Chromebooks.', rec:false },
-  'universal':   { label:'Universal',  sub:'All Architectures · Largest File',  who:'Works on any device. Larger download — use only if no arch-specific APK installs.', rec:false },
+  'arm64-v8a':   { label:'arm64-v8a',  sub:'64-bit ARM · Modern Phones',     who:'All Android phones from 2016 onwards — Samsung, Pixel, OnePlus, Xiaomi, Realme, and more.', rec:true  },
+  'armeabi-v7a': { label:'armeabi-v7a',sub:'32-bit ARM · Legacy Phones',      who:'Older or entry-level devices. Use only if arm64-v8a fails to install.', rec:false },
+  'x86_64':      { label:'x86_64',     sub:'64-bit x86 · Emulators',          who:'Android Studio emulators, Genymotion, and some x86-based Chromebooks.', rec:false },
+  'universal':   { label:'Universal',  sub:'All Architectures · Largest File', who:'Works on any device. Larger download — use only if no arch-specific APK installs.', rec:false },
 };
 
 function detectArch(name) {
@@ -417,11 +501,12 @@ function detectArch(name) {
   if (n.includes('armeabi') || n.includes('v7a')) return 'armeabi-v7a';
   if (n.includes('x86_64') || n.includes('x86-64')) return 'x86_64';
   if (n.includes('universal')) return 'universal';
-  return null; // unrecognized — skip
+  return null;
 }
 
 function fmtBytes(b) { return b ? (b/1048576).toFixed(1)+' MB' : ''; }
 function fmtDate(s)  { return s ? new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : ''; }
+function fmtDateShort(s) { return s ? new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : ''; }
 
 function makeCard(apk, meta, isRec) {
   const card = document.createElement('div');
@@ -440,6 +525,15 @@ function makeCard(apk, meta, isRec) {
   return card;
 }
 
+function getApks(release) {
+  return (release.assets || []).filter(a => a.name.endsWith('.apk') && detectArch(a.name) !== null);
+}
+
+function sortApks(apks) {
+  const order = ['arm64-v8a','armeabi-v7a','x86_64','universal'];
+  return [...apks].sort((a,b) => order.indexOf(detectArch(a.name)) - order.indexOf(detectArch(b.name)));
+}
+
 async function loadRelease() {
   try {
     const res = await fetch('https://api.github.com/repos/Shashwat-CODING/Drishya/releases/latest');
@@ -448,12 +542,7 @@ async function loadRelease() {
     document.getElementById('rel-ver').textContent = data.tag_name || 'Latest';
     document.getElementById('rel-date').textContent = fmtDate(data.published_at);
 
-    // Only APKs with known arch keywords
-    const apks = (data.assets || []).filter(a => {
-      if (!a.name.endsWith('.apk')) return false;
-      return detectArch(a.name) !== null;
-    });
-
+    const apks = sortApks(getApks(data));
     const grid = document.getElementById('apk-grid');
     grid.innerHTML = '';
 
@@ -461,9 +550,6 @@ async function loadRelease() {
       grid.innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">No APKs found in the latest release.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="btn btn-red">View on GitHub</a></div>`;
       return;
     }
-
-    const order = ['arm64-v8a','armeabi-v7a','x86_64','universal'];
-    apks.sort((a,b) => order.indexOf(detectArch(a.name)) - order.indexOf(detectArch(b.name)));
 
     let recDone = false;
     apks.forEach(apk => {
@@ -476,6 +562,95 @@ async function loadRelease() {
   } catch(e) {
     document.getElementById('apk-grid').innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">Could not load release data.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="btn btn-red">Open GitHub Releases</a></div>`;
     document.getElementById('rel-ver').textContent = 'Unknown';
+  }
+}
+
+// ── OLD VERSIONS ──────────────────────────────────────────────
+let oldLoaded = false;
+
+function toggleOldVersions() {
+  const toggle = document.getElementById('old-toggle');
+  const list   = document.getElementById('old-ver-list');
+  const isOpen = list.classList.contains('open');
+
+  if (isOpen) {
+    list.classList.remove('open');
+    toggle.classList.remove('open');
+  } else {
+    list.classList.add('open');
+    toggle.classList.add('open');
+    if (!oldLoaded) { loadOldReleases(); oldLoaded = true; }
+  }
+}
+
+function makeReleaseRow(release, index) {
+  const apks = sortApks(getApks(release));
+  if (!apks.length) return null;
+
+  const row = document.createElement('div');
+  row.className = 'release-row';
+  row.id = 'rr-' + index;
+
+  const assets = apks.map(apk => {
+    const arch = detectArch(apk.name);
+    const meta = ARCH_META[arch];
+    return `
+      <div class="asset-row">
+        <div class="asset-arch">${meta.label}</div>
+        <div class="asset-sub">${meta.sub}</div>
+        <div class="asset-size">${fmtBytes(apk.size)}</div>
+        <a href="${apk.browser_download_url}" class="asset-dl" download>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          APK
+        </a>
+      </div>`;
+  }).join('');
+
+  row.innerHTML = `
+    <div class="release-row-header" onclick="toggleRelease(${index})">
+      <div class="release-row-tag">${release.tag_name || 'Release'}</div>
+      <div class="release-row-date">${fmtDateShort(release.published_at)}</div>
+      <div class="spacer"></div>
+      <div style="font-size:11px;color:var(--text-muted);margin-right:10px;">${apks.length} APK${apks.length>1?'s':''}</div>
+      <svg class="release-row-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="release-assets">${assets}</div>
+  `;
+  return row;
+}
+
+function toggleRelease(index) {
+  const row = document.getElementById('rr-' + index);
+  row.classList.toggle('expanded');
+}
+
+async function loadOldReleases() {
+  const container = document.getElementById('old-ver-list');
+  const loading   = document.getElementById('old-ver-loading');
+
+  try {
+    const res = await fetch('https://api.github.com/repos/Shashwat-CODING/Drishya/releases?per_page=20');
+    if (!res.ok) throw new Error();
+    const releases = await res.json();
+
+    // Skip the very first (latest) — already shown above
+    const older = releases.slice(1).filter(r => getApks(r).length > 0);
+
+    document.getElementById('old-ver-count').textContent = older.length || '0';
+
+    if (!older.length) {
+      loading.textContent = 'No previous releases found.';
+      return;
+    }
+
+    loading.remove();
+
+    older.forEach((release, i) => {
+      const row = makeReleaseRow(release, i);
+      if (row) container.appendChild(row);
+    });
+  } catch(e) {
+    loading.innerHTML = `<span>Could not load. <a href="https://github.com/Shashwat-CODING/Drishya/releases" target="_blank" style="color:var(--red);">View on GitHub</a></span>`;
   }
 }
 
