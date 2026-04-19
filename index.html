@@ -273,11 +273,112 @@
 
     .divider { border: none; border-top: 1px solid var(--border); }
 
+    /* ── TELEGRAM FLOAT BUTTON ── */
+    .tg-fab {
+      position: fixed; bottom: 28px; right: 28px; z-index: 300;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #000; border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    }
+    .tg-fab:hover { border-color: #2AABEE; transform: translateY(-2px); }
+    .tg-fab svg { flex-shrink: 0; }
+
+    /* ── TELEGRAM OVERLAY BACKDROP ── */
+    .tg-backdrop {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .tg-backdrop.open { opacity: 1; pointer-events: all; }
+
+    /* ── TELEGRAM PANEL ── */
+    .tg-panel {
+      position: fixed; bottom: 0; right: 0; z-index: 500;
+      width: 360px; max-width: 100vw;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom: none; border-right: none;
+      border-radius: 16px 0 0 0;
+      transform: translateY(110%);
+      transition: transform 0.34s cubic-bezier(0.32,0.72,0,1);
+      overflow: hidden;
+    }
+    .tg-panel.open { transform: translateY(0); }
+
+    .tg-panel-top {
+      position: relative;
+      padding: 28px 24px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Telegram blue accent line at top */
+    .tg-panel-top::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: #2AABEE;
+    }
+
+    .tg-close {
+      position: absolute; top: 14px; right: 16px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-dim); transition: all 0.15s;
+    }
+    .tg-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    .tg-icon-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .tg-brand-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: #2AABEE; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+
+    .tg-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 1px; }
+    .tg-handle { font-size: 12px; color: #2AABEE; letter-spacing: 0.3px; }
+
+    .tg-desc { font-size: 13px; color: var(--text-dim); line-height: 1.65; margin-bottom: 20px; }
+
+    .tg-perks { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+    .tg-perk {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: var(--text-dim);
+    }
+    .tg-perk-icon {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: rgba(42,171,238,0.1); border: 1px solid rgba(42,171,238,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #2AABEE;
+    }
+
+    .tg-join-btn {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      width: 100%; padding: 13px; border-radius: 8px;
+      background: #2AABEE; border: none; color: #fff;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+      text-decoration: none; cursor: pointer; transition: all 0.16s;
+      font-family: inherit;
+    }
+    .tg-join-btn:hover { background: #30b8f8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(42,171,238,0.3); }
+
+    .tg-panel-footer {
+      padding: 14px 24px;
+      font-size: 11px; color: var(--text-muted);
+      text-align: center; letter-spacing: 0.3px;
+    }
+    .tg-panel-footer a { color: #2AABEE; text-decoration: none; }
+
     @media(max-width:768px){
       nav { padding: 0 20px; }
       .nav-links { display: none; }
       .stats-strip { grid-template-columns: repeat(3,1fr); }
       .config-inner { flex-direction: column; text-align: center; }
+      .tg-panel { width: 100vw; border-radius: 16px 16px 0 0; border-left: none; }
+      .tg-fab { bottom: 20px; right: 20px; }
     }
   </style>
 </head>
@@ -293,6 +394,8 @@
     <li><a href="#download">Download</a></li>
     <li><a href="#tech">Stack</a></li>
     <li><a href="/config" class="hl">Configure</a></li>
+    <li><a href="#" onclick="openTelegram();return false;" style="color:#2AABEE;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="#2AABEE" style="vertical-align:-2px;margin-right:4px"><path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z"/></svg>Community</a></li>
   </ul>
 </nav>
 
@@ -371,7 +474,7 @@
     <div class="feat-card">
       <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
       <div class="feat-title">Premium Playback</div>
-      <div class="feat-desc">Hardware-accelerated player via FVP with advanced buffering and subtitle rendering.</div>
+      <div class="feat-desc">Hardware-accelerated player via media_kit with advanced buffering and subtitle rendering.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
@@ -407,7 +510,7 @@
   <div class="section-title">TECH <span>STACK</span></div>
   <div class="tech-grid">
     <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Flutter SDK</div>
-    <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>FVP</div>
+    <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>media_kit</div>
     <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>Material 3</div>
     <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>dynamic_color</div>
     <div class="tech-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>flutter_animate</div>
@@ -655,6 +758,99 @@ async function loadOldReleases() {
 }
 
 loadRelease();
+
+// ── TELEGRAM OVERLAY ──
+function openTelegram() {
+  document.getElementById('tg-panel').classList.add('open');
+  document.getElementById('tg-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeTelegram() {
+  document.getElementById('tg-panel').classList.remove('open');
+  document.getElementById('tg-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTelegram(); });
+
+// Auto-show after 6 seconds on first visit (once per session)
+if (!sessionStorage.getItem('tg-shown')) {
+  setTimeout(() => {
+    openTelegram();
+    sessionStorage.setItem('tg-shown', '1');
+  }, 6000);
+}
 </script>
+<!-- TELEGRAM FAB -->
+<button class="tg-fab" onclick="openTelegram()" aria-label="Join Telegram">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.22l-1.68 7.92c-.12.56-.45.7-.91.43l-2.52-1.86-1.21 1.17c-.14.14-.25.25-.51.25l.18-2.57 4.7-4.24c.2-.18-.05-.28-.32-.1L7.68 14.3l-2.46-.77c-.54-.17-.55-.54.11-.8l9.62-3.71c.44-.16.83.1.68.68z" fill="#2AABEE"/>
+  </svg>
+</button>
+
+<!-- TELEGRAM BACKDROP -->
+<div class="tg-backdrop" id="tg-backdrop" onclick="closeTelegram()"></div>
+
+<!-- TELEGRAM PANEL -->
+<div class="tg-panel" id="tg-panel">
+  <div class="tg-panel-top">
+    <button class="tg-close" onclick="closeTelegram()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="tg-icon-row">
+      <div class="tg-brand-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z" fill="#fff"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tg-name">DRISHYA COMMUNITY</div>
+        <div class="tg-handle">t.me/drishyapp</div>
+      </div>
+    </div>
+
+    <div class="tg-desc">
+      Get updates, report issues, request features, and connect with other Drishya users — all in one place.
+    </div>
+
+    <div class="tg-perks">
+      <div class="tg-perk">
+        <div class="tg-perk-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        Early release announcements &amp; changelogs
+      </div>
+      <div class="tg-perk">
+        <div class="tg-perk-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        Bug reports &amp; feature requests direct to dev
+      </div>
+      <div class="tg-perk">
+        <div class="tg-perk-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        Active community of streamers
+      </div>
+      <div class="tg-perk">
+        <div class="tg-perk-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        APK &amp; provider config tips
+      </div>
+    </div>
+
+    <a href="https://t.me/drishyapp" target="_blank" class="tg-join-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z" fill="#fff"/>
+      </svg>
+      Join on Telegram
+    </a>
+  </div>
+  <div class="tg-panel-footer">
+    Open in app or browser &nbsp;·&nbsp; <a href="https://t.me/drishyapp" target="_blank">t.me/drishyapp</a>
+  </div>
+</div>
+
 </body>
 </html>
