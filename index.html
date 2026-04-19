@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drishya — Your Ultimate Streaming Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #0e0e0e;
+      --surface2: #181818;
+      --surface3: #222;
+      --red: #e50914;
+      --red-lo: rgba(229,9,20,0.12);
+      --red-border: rgba(229,9,20,0.25);
+      --text: #f2f2f2;
+      --text-dim: #777;
+      --text-muted: #3a3a3a;
+      --border: rgba(255,255,255,0.07);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 60px;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand img { width: 28px; height: 28px; border-radius: 7px; object-fit: contain; }
+    .nav-brand span { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--red); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.hl { color: var(--red); }
+
+    /* HERO */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 24px 0; overflow: hidden;
+    }
+    .hero-radial {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(229,9,20,0.11) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-lo); border: 1px solid var(--red-border);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--red);
+      margin-bottom: 36px; animation: fadeUp 0.7s ease both;
+    }
+    .pulse-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+    .hero-logo {
+      width: 110px; height: 110px; border-radius: 28px; border: 1px solid var(--red-border);
+      box-shadow: 0 0 60px rgba(229,9,20,0.18), 0 0 120px rgba(229,9,20,0.07);
+      margin: 0 auto 32px; overflow: hidden; background: var(--surface2);
+      animation: fadeUp 0.7s 0.08s ease both;
+    }
+    .hero-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(80px, 16vw, 150px); letter-spacing: 8px; line-height: 0.9; margin-bottom: 18px; animation: fadeUp 0.7s 0.14s ease both; }
+    h1 em { color: var(--red); font-style: normal; }
+
+    .hero-tagline { font-size: clamp(14px, 2vw, 17px); color: var(--text-dim); max-width: 500px; margin: 0 auto 16px; font-weight: 300; animation: fadeUp 0.7s 0.2s ease both; }
+
+    .feature-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 44px; animation: fadeUp 0.7s 0.26s ease both; }
+    .fpill { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 5px 13px; font-size: 12px; color: var(--text-dim); }
+    .fpill svg { color: var(--red); flex-shrink: 0; }
+
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.7s 0.32s ease both; }
+
+    .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 26px; border-radius: 6px; font-size: 13px; font-weight: 500; letter-spacing: 0.3px; text-decoration: none; cursor: pointer; border: none; transition: all 0.18s; font-family: inherit; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: #ff1120; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(229,9,20,0.38); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    /* STATS */
+    .stats-strip {
+      position: relative; z-index: 1; display: grid; grid-template-columns: repeat(5,1fr);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--bg); margin-top: 72px; width: 100%;
+    }
+    .stat-item { padding: 28px 16px; text-align: center; border-right: 1px solid var(--border); }
+    .stat-item:last-child { border-right: none; }
+    .stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 2px; color: var(--red); display: block; }
+    .stat-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+    /* SECTION */
+    .section { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 88px 24px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 14px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px,6vw,64px); letter-spacing: 3px; margin-bottom: 48px; line-height: 1; }
+    .section-title span { color: var(--red); }
+
+    /* FEATURES */
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .feat-card { background: var(--bg); padding: 30px 28px; transition: background 0.2s; }
+    .feat-card:hover { background: var(--surface); }
+    .feat-icon { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--red-lo); border: 1px solid var(--red-border); border-radius: 10px; margin-bottom: 16px; color: var(--red); }
+    .feat-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+    .feat-desc { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+    /* TECH */
+    .tech-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tech-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 9px 16px; font-size: 13px; color: var(--text-dim); }
+    .tech-tag svg { color: var(--red); }
+
+    /* DOWNLOAD */
+    #download { max-width: 1080px; margin: 0 auto; padding: 0 24px 88px; }
+    .dl-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px,6vw,64px); letter-spacing: 3px; margin-bottom: 32px; line-height: 1; }
+
+    .release-bar { display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 7px; margin-bottom: 20px; font-size: 13px; color: var(--text-dim); }
+    .release-bar strong { color: var(--text); }
+    .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
+    .spacer { flex: 1; }
+
+    .apk-guide { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; max-width: 580px; padding: 14px 18px; background: var(--surface); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; }
+    .apk-guide strong { color: var(--text); }
+
+    .apk-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 14px; }
+    .apk-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 26px; position: relative; overflow: hidden; transition: border-color 0.2s; }
+    .apk-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.28s ease; }
+    .apk-card:hover { border-color: var(--red-border); }
+    .apk-card:hover::after { transform: scaleX(1); }
+    .apk-card.rec { border-color: var(--red-border); }
+    .apk-card.rec::after { transform: scaleX(1); }
+    .rec-badge { position: absolute; top: 14px; right: 14px; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+    .apk-arch { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; margin-bottom: 2px; }
+    .apk-subtitle { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
+    .apk-who { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; }
+    .apk-who svg { flex-shrink: 0; margin-top: 2px; color: var(--text-muted); }
+    .dl-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.18s; font-family: inherit; }
+    .dl-btn:hover { background: var(--red); border-color: var(--red); transform: translateY(-1px); }
+    .apk-size { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 9px; }
+
+    /* skeleton */
+    .skel { background: linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 4px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* CONFIG BANNER */
+    .config-banner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto 88px; padding: 0 24px; }
+    .config-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; background: linear-gradient(135deg,var(--surface) 0%,rgba(229,9,20,0.04) 100%); border: 1px solid var(--red-border); border-radius: 10px; padding: 32px 36px; }
+    .config-inner h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; margin-bottom: 5px; }
+    .config-inner p { font-size: 13px; color: var(--text-dim); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; font-size: 12px; color: var(--text-muted); }
+    footer a { color: var(--red); text-decoration: none; }
+
+    @media(max-width:768px){
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .stats-strip { grid-template-columns: repeat(3,1fr); }
+      .config-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" alt="Drishya" onerror="this.style.display='none'">
+    <span>DRISHYA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#download">Download</a></li>
+    <li><a href="#tech">Tech Stack</a></li>
+    <li><a href="/config" class="hl">Configure</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-radial"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="pulse-dot"></div>Free &amp; Open Source</div>
+    <div class="hero-logo">
+      <img src="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" alt="Drishya Logo">
+    </div>
+    <h1>DRISHYA<em>.</em></h1>
+    <p class="hero-tagline">Your ultimate all-in-one streaming hub for Movies, TV Shows, Anime, Live TV, and Sports.</p>
+    <div class="feature-pills">
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Movies &amp; TV Series
+      </div>
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>
+        Live TV
+      </div>
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Anime
+      </div>
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Sports
+      </div>
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+        Minigames
+      </div>
+      <div class="fpill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Dubs
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#download" class="btn btn-red">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download APK
+      </a>
+      <a href="/config" class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>
+        Configure App
+      </a>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div class="stat-item"><span class="stat-val">4K</span><div class="stat-lbl">Max Quality</div></div>
+    <div class="stat-item"><span class="stat-val">7+</span><div class="stat-lbl">Content Types</div></div>
+    <div class="stat-item"><span class="stat-val">M3</span><div class="stat-lbl">Material Design</div></div>
+    <div class="stat-item"><span class="stat-val">A12+</span><div class="stat-lbl">Dynamic Colors</div></div>
+    <div class="stat-item"><span class="stat-val">MIT</span><div class="stat-lbl">License</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-eyebrow">What's included</div>
+  <div class="section-title">EVERYTHING IN ONE <span>APP</span></div>
+  <div class="feat-grid">
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <div class="feat-title">Movies &amp; TV Series</div>
+      <div class="feat-desc">A vast library of films and complete TV series with detailed metadata, ratings, and seamless high-quality playback.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg></div>
+      <div class="feat-title">Live TV (IPTV)</div>
+      <div class="feat-desc">Stream live television channels worldwide directly inside the app — no external player or setup needed.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div class="feat-title">Anime</div>
+      <div class="feat-desc">Full anime catalog with subbed and dubbed episodes, season tracking, and complete watch history.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="feat-title">Sports</div>
+      <div class="feat-desc">Watch live sports events from around the world — football, cricket, tennis, and more in real time.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div>
+      <div class="feat-title">Minigames</div>
+      <div class="feat-desc">Built-in minigames to keep you entertained between episodes — a unique feature exclusive to Drishya.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+      <div class="feat-title">Dubs &amp; Multi-Audio</div>
+      <div class="feat-desc">Switch between dubbed and subbed audio tracks instantly. Wide language support across all content types.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div class="feat-title">Premium Playback</div>
+      <div class="feat-desc">Hardware-accelerated player via media_kit with advanced buffering optimizations and subtitle rendering.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="feat-title">Smart Search</div>
+      <div class="feat-desc">Blazing-fast search across all content types with smart suggestions and instant results.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg></div>
+      <div class="feat-title">Watch History</div>
+      <div class="feat-desc">Automatically tracks everything you watch and lets you resume exactly where you left off.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+      <div class="feat-title">Dynamic Colors</div>
+      <div class="feat-desc">Android 12+ Monet theming that adapts the entire UI to your wallpaper palette automatically.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="feat-title">Modern UI</div>
+      <div class="feat-desc">Glassmorphism and Material 3 design elements with fluid animations powered by flutter_animate.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <div class="feat-title">Subtitles</div>
+      <div class="feat-desc">Multi-language subtitle support with customizable font size, style, and on-screen positioning.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section" id="tech" style="padding-top:0">
+  <div class="section-eyebrow">Under the hood</div>
+  <div class="section-title">TECH <span>STACK</span></div>
+  <div class="tech-grid">
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Flutter SDK</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>media_kit</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Material 3</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>dynamic_color</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>flutter_animate</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>cached_network_image</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Shared Preferences</div>
+    <div class="tech-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Stateful Widgets</div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<div id="download" style="max-width:1080px;margin:0 auto;padding:0 24px 88px;">
+  <div class="section-eyebrow">Get the app</div>
+  <div class="dl-heading">DOWNLOAD</div>
+
+  <div class="release-bar" id="release-bar">
+    <div class="online-dot"></div>
+    <span>Latest Release: <strong id="rel-ver">Fetching...</strong></span>
+    <div class="spacer"></div>
+    <span id="rel-date" style="font-size:12px;"></span>
+  </div>
+
+  <div class="apk-guide">
+    Not sure which APK to pick? <strong>arm64-v8a</strong> works on nearly all Android phones from 2016 onwards. Use armeabi-v7a only if arm64 fails to install.
+  </div>
+
+  <div class="apk-grid" id="apk-grid">
+    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="skel" style="height:28px;width:55%;"></div>
+      <div class="skel" style="height:13px;width:70%;"></div>
+      <div class="skel" style="height:13px;width:80%;"></div>
+      <div class="skel" style="height:44px;margin-top:8px;"></div>
+    </div>
+    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="skel" style="height:28px;width:55%;"></div>
+      <div class="skel" style="height:13px;width:70%;"></div>
+      <div class="skel" style="height:13px;width:80%;"></div>
+      <div class="skel" style="height:44px;margin-top:8px;"></div>
+    </div>
+    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="skel" style="height:28px;width:55%;"></div>
+      <div class="skel" style="height:13px;width:70%;"></div>
+      <div class="skel" style="height:13px;width:80%;"></div>
+      <div class="skel" style="height:44px;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIG BANNER -->
+<div class="config-banner">
+  <div class="config-inner">
+    <div>
+      <h3>CONFIGURE YOUR PROVIDERS</h3>
+      <p>Connect Drishya to your preferred streaming backend instance with one tap.</p>
+    </div>
+    <a href="/config" class="btn btn-red" style="white-space:nowrap;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>
+      Open Config
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>Built with love using Flutter &nbsp;&middot;&nbsp; <a href="https://github.com/Shashwat-CODING/Drishya" target="_blank">View on GitHub</a> &nbsp;&middot;&nbsp; MIT License</p>
+</footer>
+
+<script>
+const ARCH_META = {
+  'arm64-v8a':   { label:'arm64-v8a',  sub:'64-bit ARM · Modern Phones',     who:'All Android phones from 2016 onwards — Samsung, Pixel, OnePlus, Xiaomi, Realme, and more.', rec:true  },
+  'armeabi-v7a': { label:'armeabi-v7a',sub:'32-bit ARM · Legacy Phones',      who:'Older or entry-level Android devices. Use only if arm64-v8a fails to install on your device.', rec:false },
+  'x86_64':      { label:'x86_64',     sub:'64-bit x86 · Emulators',          who:'Android Studio emulators, Genymotion, and some x86-based Chromebooks.', rec:false },
+  'universal':   { label:'Universal',  sub:'All Architectures · Largest File', who:'Works on any device. Larger download — use only if no architecture-specific APK installs.', rec:false },
+};
+
+function detectArch(name) {
+  const n = name.toLowerCase();
+  if (n.includes('arm64') || n.includes('arm64-v8a')) return 'arm64-v8a';
+  if (n.includes('armeabi') || n.includes('v7a'))     return 'armeabi-v7a';
+  if (n.includes('x86_64') || n.includes('x86-64'))   return 'x86_64';
+  return 'universal';
+}
+
+function fmtBytes(b) { return b ? (b/1048576).toFixed(1)+' MB' : ''; }
+function fmtDate(s)  { return s ? new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : ''; }
+
+function makeCard(apk, meta, isRec) {
+  const card = document.createElement('div');
+  card.className = 'apk-card'+(isRec?' rec':'');
+  card.innerHTML = `
+    ${isRec?'<div class="rec-badge">Recommended</div>':''}
+    <div class="apk-arch">${meta.label}</div>
+    <div class="apk-subtitle">${meta.sub}</div>
+    <div class="apk-who">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      ${meta.who}
+    </div>
+    <a href="${apk.browser_download_url}" class="dl-btn" download>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download APK
+    </a>
+    <div class="apk-size">${fmtBytes(apk.size)}</div>
+  `;
+  return card;
+}
+
+async function loadRelease() {
+  try {
+    const res = await fetch('https://api.github.com/repos/Shashwat-CODING/Drishya/releases/latest');
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    document.getElementById('rel-ver').textContent = data.tag_name || 'Latest';
+    document.getElementById('rel-date').textContent = fmtDate(data.published_at);
+    const apks = (data.assets||[]).filter(a=>a.name.endsWith('.apk'));
+    const grid = document.getElementById('apk-grid');
+    grid.innerHTML = '';
+    if (!apks.length) {
+      grid.innerHTML = `<div class="apk-card" style="grid-column:1/-1;text-align:center;padding:48px;"><p style="color:var(--text-dim);margin-bottom:20px;">No APK assets found in the latest release.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="btn btn-red">View on GitHub</a></div>`;
+      return;
+    }
+    const order = ['arm64-v8a','armeabi-v7a','x86_64','universal'];
+    apks.sort((a,b)=>order.indexOf(detectArch(a.name))-order.indexOf(detectArch(b.name)));
+    let recDone = false;
+    apks.forEach(apk => {
+      const arch = detectArch(apk.name);
+      const meta = ARCH_META[arch]||ARCH_META['universal'];
+      const isRec = meta.rec && !recDone;
+      if (isRec) recDone = true;
+      grid.appendChild(makeCard(apk, meta, isRec));
+    });
+  } catch(e) {
+    document.getElementById('apk-grid').innerHTML = `<div class="apk-card" style="grid-column:1/-1;text-align:center;padding:48px;"><p style="color:var(--text-dim);margin-bottom:20px;">Could not load release data. Download directly from GitHub.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="btn btn-red">Open GitHub Releases</a></div>`;
+    document.getElementById('rel-ver').textContent = 'Unknown';
+  }
+}
+
+loadRelease();
+</script>
+</body>
+</html>
