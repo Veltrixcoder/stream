@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Drishya — Download</title>
-  <meta name="description" content="Download Drishya APK for Android. Free & open-source streaming app for Movies, TV Shows, Anime, Live TV and Sports." />
+  <meta name="description" content="Download Drishya for Android, Windows & Linux. Free & open-source streaming app for Movies, TV Shows, Anime, Live TV and Sports." />
   <meta name="author" content="Shashwat-CODING" />
   <meta name="theme-color" content="#e50914" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Drishya — Download" />
-  <meta property="og:description" content="Download Drishya APK for Android." />
+  <meta property="og:description" content="Download Drishya for Android, Windows & Linux." />
   <meta property="og:image" content="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" />
   <meta property="og:url" content="https://drishya.app/download" />
   <meta property="og:site_name" content="Drishya" />
@@ -31,6 +31,15 @@
       --tg: #2AABEE;
       --tg-lo: rgba(42,171,238,0.08);
       --tg-border: rgba(42,171,238,0.2);
+      --win: #0078d4;
+      --win-lo: rgba(0,120,212,0.08);
+      --win-border: rgba(0,120,212,0.22);
+      --linux: #f6a800;
+      --linux-lo: rgba(246,168,0,0.08);
+      --linux-border: rgba(246,168,0,0.22);
+      --android: #3ddc84;
+      --android-lo: rgba(61,220,132,0.08);
+      --android-border: rgba(61,220,132,0.22);
       --text: #f0f0f0;
       --text-dim: #666;
       --text-muted: #2a2a2a;
@@ -100,24 +109,52 @@
     .release-bar {
       display: flex; align-items: center; gap: 14px;
       padding: 13px 20px; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); margin-bottom: 18px; font-size: 12px; color: var(--text-dim);
+      border-radius: var(--radius); margin-bottom: 28px; font-size: 12px; color: var(--text-dim);
       animation: fadeUp 0.5s 0.1s ease both;
     }
     .release-bar strong { color: var(--text); }
     .online-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
     .spacer { flex: 1; }
 
+    /* ── PLATFORM TABS ── */
+    .platform-tabs {
+      display: flex; gap: 8px; margin-bottom: 28px;
+      animation: fadeUp 0.5s 0.12s ease both;
+    }
+    .ptab {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.5px; color: var(--text-dim);
+      transition: all 0.18s; position: relative; overflow: hidden;
+    }
+    .ptab:hover { border-color: var(--border-strong); color: var(--text); }
+    .ptab.active-android { color: var(--android); background: var(--android-lo); border-color: var(--android-border); }
+    .ptab.active-windows { color: var(--win); background: var(--win-lo); border-color: var(--win-border); }
+    .ptab.active-linux { color: var(--linux); background: var(--linux-lo); border-color: var(--linux-border); }
+    .ptab svg { flex-shrink: 0; }
+    .ptab-label { display: flex; flex-direction: column; gap: 1px; }
+    .ptab-name { font-size: 12px; font-weight: 500; }
+    .ptab-note { font-size: 10px; opacity: 0.6; letter-spacing: 0.3px; }
+
+    /* ── PANEL ── */
+    .platform-panel { display: none; animation: fadeUp 0.3s ease both; }
+    .platform-panel.active { display: block; }
+
     .apk-guide {
       font-size: 12px; color: var(--text-dim); margin-bottom: 28px;
       max-width: 560px; padding: 14px 18px;
-      background: var(--surface); border-left: 2px solid var(--red); border-radius: var(--radius-sm);
-      animation: fadeUp 0.5s 0.15s ease both;
+      background: var(--surface); border-radius: var(--radius-sm);
     }
+    .apk-guide.android { border-left: 2px solid var(--android); }
+    .apk-guide.windows { border-left: 2px solid var(--win); }
+    .apk-guide.linux   { border-left: 2px solid var(--linux); }
     .apk-guide strong { color: var(--text); }
 
     .apk-grid {
       display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-      gap: 12px; animation: fadeUp 0.5s 0.2s ease both;
+      gap: 12px;
     }
     .apk-card {
       background: var(--surface); border: 1px solid var(--border);
@@ -126,11 +163,24 @@
       transition: border-color 0.18s, background 0.18s;
     }
     .apk-card:hover { background: var(--surface2); border-color: var(--border-strong); }
-    .apk-card.rec { border-color: var(--red-border); }
-    .rec-badge { display: inline-block; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; }
+    .apk-card.rec-android { border-color: var(--android-border); }
+    .apk-card.rec-windows { border-color: var(--win-border); }
+    .apk-card.rec-linux   { border-color: var(--linux-border); }
+    .rec-badge { display: inline-block; color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; }
+    .rec-badge.android { background: var(--android); color: #000; }
+    .rec-badge.windows { background: var(--win); }
+    .rec-badge.linux   { background: var(--linux); color: #000; }
+
+    /* platform icon in card */
+    .card-platform-icon {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+    }
+    .card-platform-icon svg { opacity: 0.5; }
+
     .apk-arch { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px; margin-bottom: 3px; }
     .apk-subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 10px; letter-spacing: 0.5px; }
     .apk-who { font-size: 11px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.65; }
+
     .dl-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%; padding: 13px; background: var(--surface2); border: 1px solid var(--border);
@@ -138,7 +188,9 @@
       letter-spacing: 0.8px; text-transform: uppercase; text-decoration: none;
       cursor: pointer; transition: all 0.18s; font-family: inherit;
     }
-    .dl-btn:hover { background: var(--red); border-color: var(--red); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,9,20,0.3); }
+    .dl-btn.android:hover { background: var(--android); border-color: var(--android); color: #000; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(61,220,132,0.25); }
+    .dl-btn.windows:hover { background: var(--win); border-color: var(--win); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,120,212,0.3); }
+    .dl-btn.linux:hover   { background: var(--linux); border-color: var(--linux); color: #000; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(246,168,0,0.3); }
     .apk-size { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 8px; letter-spacing: 0.5px; }
 
     /* skeleton */
@@ -175,6 +227,7 @@
     .release-row.expanded .release-assets { display: flex; }
     .asset-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #000; border: 1px solid var(--border); border-radius: var(--radius-sm); transition: border-color 0.15s; }
     .asset-row:hover { border-color: var(--border-strong); }
+    .asset-platform-icon { display: flex; align-items: center; flex-shrink: 0; }
     .asset-arch { font-size: 13px; font-weight: 500; color: var(--text); min-width: 110px; }
     .asset-sub { font-size: 11px; color: var(--text-muted); flex: 1; }
     .asset-size { font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px; white-space: nowrap; }
@@ -251,6 +304,8 @@
       .cta-banner { flex-direction: column; text-align: center; }
       .tg-fab { bottom: 20px; right: 20px; }
       .tg-modal-body { padding: 24px 20px 20px; }
+      .platform-tabs { flex-wrap: wrap; }
+      .ptab { flex: 1; min-width: 120px; justify-content: center; }
     }
   </style>
 </head>
@@ -280,7 +335,7 @@
   <div class="page-header">
     <div class="section-eyebrow">Get the app</div>
     <div class="page-title">DOWNLOAD<em>.</em></div>
-    <p class="page-sub">Free Android APK. Choose the build for your device architecture.</p>
+    <p class="page-sub">Free & open-source. Available for Android, Windows, and Linux.</p>
   </div>
 
   <div class="release-bar" id="release-bar">
@@ -290,28 +345,85 @@
     <span id="rel-date" style="font-size:11px;letter-spacing:0.3px;"></span>
   </div>
 
-  <div class="apk-guide">
-    Not sure which APK to pick? <strong>arm64-v8a</strong> works on nearly all Android phones from 2016 onwards. Use armeabi-v7a only if arm64 fails.
+  <!-- PLATFORM TABS -->
+  <div class="platform-tabs">
+    <button class="ptab active-android" id="tab-android" onclick="switchPlatform('android')">
+      <img src="https://img.icons8.com/?size=96&id=17836&format=png" width="22" height="22" style="object-fit:contain;" alt="Android">
+      <div class="ptab-label">
+        <span class="ptab-name">Android</span>
+        <span class="ptab-note">APK · 37–45 MB</span>
+      </div>
+    </button>
+    <button class="ptab" id="tab-windows" onclick="switchPlatform('windows')">
+      <img src="https://img.icons8.com/?size=512&id=M9BRw0RJZXKi&format=png" width="22" height="22" style="object-fit:contain;" alt="Windows">
+      <div class="ptab-label">
+        <span class="ptab-name">Windows</span>
+        <span class="ptab-note">Installer · 20.3 MB</span>
+      </div>
+    </button>
+    <button class="ptab" id="tab-linux" onclick="switchPlatform('linux')">
+      <img src="https://img.icons8.com/?size=96&id=fG5Tnj4ARIoI&format=gif&color=f7f7f7" width="22" height="22" style="object-fit:contain;" alt="Linux">
+      <div class="ptab-label">
+        <span class="ptab-name">Linux</span>
+        <span class="ptab-note">AppImage · 26.4 MB</span>
+      </div>
+    </button>
   </div>
 
-  <div class="apk-grid" id="apk-grid">
-    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
-      <div class="skel" style="width:50%;height:28px;"></div>
-      <div class="skel" style="width:65%;"></div>
-      <div class="skel" style="width:80%;"></div>
-      <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+  <!-- ANDROID PANEL -->
+  <div class="platform-panel active" id="panel-android">
+    <div class="apk-guide android">
+      Not sure which APK? <strong>arm64-v8a</strong> works on nearly all Android phones from 2016 onwards. Use armeabi-v7a only if arm64 fails to install.
     </div>
-    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
-      <div class="skel" style="width:50%;height:28px;"></div>
-      <div class="skel" style="width:65%;"></div>
-      <div class="skel" style="width:80%;"></div>
-      <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+    <div class="apk-grid" id="apk-grid">
+      <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="width:50%;height:28px;"></div>
+        <div class="skel" style="width:65%;"></div>
+        <div class="skel" style="width:80%;"></div>
+        <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+      </div>
+      <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="width:50%;height:28px;"></div>
+        <div class="skel" style="width:65%;"></div>
+        <div class="skel" style="width:80%;"></div>
+        <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+      </div>
+      <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="width:50%;height:28px;"></div>
+        <div class="skel" style="width:65%;"></div>
+        <div class="skel" style="width:80%;"></div>
+        <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+      </div>
     </div>
-    <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
-      <div class="skel" style="width:50%;height:28px;"></div>
-      <div class="skel" style="width:65%;"></div>
-      <div class="skel" style="width:80%;"></div>
-      <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+  </div>
+
+  <!-- WINDOWS PANEL -->
+  <div class="platform-panel" id="panel-windows">
+    <div class="apk-guide windows">
+      Standard Windows installer (<strong>.exe</strong>). Runs the NSIS setup wizard — just click through and you're done. Windows 10 / 11 recommended.
+    </div>
+    <div class="apk-grid" id="win-grid">
+      <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="width:50%;height:28px;"></div>
+        <div class="skel" style="width:65%;"></div>
+        <div class="skel" style="width:80%;"></div>
+        <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINUX PANEL -->
+  <div class="platform-panel" id="panel-linux">
+    <div class="apk-guide linux">
+      Portable <strong>AppImage</strong> — no installation needed. Make it executable with <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px;">chmod +x Drishya-x86_64.AppImage</code> then run it directly.
+    </div>
+    <div class="apk-grid" id="linux-grid">
+      <div class="apk-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="width:50%;height:28px;"></div>
+        <div class="skel" style="width:65%;"></div>
+        <div class="skel" style="width:80%;"></div>
+        <div class="skel" style="height:44px;margin-top:8px;border-radius:50px;"></div>
+      </div>
     </div>
   </div>
 
@@ -387,12 +499,39 @@
 </div>
 
 <script>
-const ARCH_META = {
-  'arm64-v8a':   { label:'arm64-v8a',  sub:'64-bit ARM · Modern Phones',     who:'All Android phones from 2016 onwards — Samsung, Pixel, OnePlus, Xiaomi, Realme, and more.', rec:true  },
-  'armeabi-v7a': { label:'armeabi-v7a',sub:'32-bit ARM · Legacy Phones',      who:'Older or entry-level devices. Use only if arm64-v8a fails to install.', rec:false },
-  'x86_64':      { label:'x86_64',     sub:'64-bit x86 · Emulators',          who:'Android Studio emulators, Genymotion, and some x86-based Chromebooks.', rec:false },
-  'universal':   { label:'Universal',  sub:'All Architectures · Largest File', who:'Works on any device. Larger download — use only if no arch-specific APK installs.', rec:false },
+// ── Platform icons ──
+const PLATFORM_ICONS = {
+  android: `<img src="https://img.icons8.com/?size=96&id=17836&format=png" width="20" height="20" style="object-fit:contain;" alt="Android">`,
+  windows: `<img src="https://img.icons8.com/?size=512&id=M9BRw0RJZXKi&format=png" width="20" height="20" style="object-fit:contain;" alt="Windows">`,
+  linux:   `<img src="https://img.icons8.com/?size=96&id=fG5Tnj4ARIoI&format=gif&color=f7f7f7" width="20" height="20" style="object-fit:contain;" alt="Linux">`,
 };
+
+const ARCH_META = {
+  'arm64-v8a':   { label:'arm64-v8a',  sub:'64-bit ARM · Modern Phones',     who:'All Android phones from 2016 onwards — Samsung, Pixel, OnePlus, Xiaomi, Realme, and more.', rec:true, platform:'android'  },
+  'armeabi-v7a': { label:'armeabi-v7a',sub:'32-bit ARM · Legacy Phones',      who:'Older or entry-level devices. Use only if arm64-v8a fails to install.', rec:false, platform:'android' },
+  'x86_64':      { label:'x86_64',     sub:'64-bit x86 · Emulators',          who:'Android Studio emulators, Genymotion, and some x86-based Chromebooks.', rec:false, platform:'android' },
+  'universal':   { label:'Universal',  sub:'All Architectures · Largest File', who:'Works on any device. Larger download — use only if no arch-specific APK installs.', rec:false, platform:'android' },
+};
+
+const DESKTOP_META = {
+  windows: {
+    label: 'Drishya Setup',
+    sub: 'Windows Installer · NSIS',
+    who: 'Works on Windows 10 and 11 (64-bit). Installs via the standard Windows setup wizard.',
+    rec: true,
+    btnClass: 'windows',
+    recBadge: 'windows',
+  },
+  linux: {
+    label: 'AppImage',
+    sub: 'Linux · x86_64 · Portable',
+    who: 'Works on most 64-bit Linux distros (Ubuntu, Fedora, Arch, etc.). No installation required — just make executable and run.',
+    rec: true,
+    btnClass: 'linux',
+    recBadge: 'linux',
+  }
+};
+
 function detectArch(n) {
   n = n.toLowerCase();
   if (n.includes('arm64')||n.includes('v8a')) return 'arm64-v8a';
@@ -401,13 +540,38 @@ function detectArch(n) {
   if (n.includes('universal')) return 'universal';
   return null;
 }
+function isWinAsset(n)   { return /\.exe$/i.test(n); }
+function isLinuxAsset(n) { return /\.appimage$/i.test(n); }
 function fmtBytes(b) { return b ? (b/1048576).toFixed(1)+' MB' : ''; }
 function fmtDate(s)  { return s ? new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : ''; }
 function fmtDateShort(s) { return s ? new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : ''; }
 function getApks(r) { return (r.assets||[]).filter(a=>a.name.endsWith('.apk')&&detectArch(a.name)!==null); }
+function getWinAssets(r)   { return (r.assets||[]).filter(a=>isWinAsset(a.name)); }
+function getLinuxAssets(r) { return (r.assets||[]).filter(a=>isLinuxAsset(a.name)); }
 function sortApks(apks) {
   const order=['arm64-v8a','armeabi-v7a','x86_64','universal'];
   return [...apks].sort((a,b)=>order.indexOf(detectArch(a.name))-order.indexOf(detectArch(b.name)));
+}
+
+// DL icon SVG
+const dlIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+
+function buildDesktopCard(asset, meta) {
+  const card = document.createElement('div');
+  card.className = `apk-card rec-${meta.btnClass}`;
+  card.innerHTML = `
+    <div class="rec-badge ${meta.recBadge}">Recommended</div>
+    <div class="card-platform-icon">${PLATFORM_ICONS[meta.btnClass]}</div>
+    <div class="apk-arch">${meta.label}</div>
+    <div class="apk-subtitle">${meta.sub}</div>
+    <div class="apk-who">${meta.who}</div>
+    <a href="${asset.browser_download_url}" class="dl-btn ${meta.btnClass}" download>
+      ${dlIcon}
+      Download
+    </a>
+    <div class="apk-size">${fmtBytes(asset.size)}</div>
+  `;
+  return card;
 }
 
 async function loadRelease() {
@@ -417,38 +581,73 @@ async function loadRelease() {
     const data = await res.json();
     document.getElementById('rel-ver').textContent = data.tag_name || 'Latest';
     document.getElementById('rel-date').textContent = fmtDate(data.published_at);
+
+    // Android
     const apks = sortApks(getApks(data));
     const grid = document.getElementById('apk-grid');
     grid.innerHTML = '';
     if (!apks.length) {
-      grid.innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">No APKs found in the latest release.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn">View on GitHub</a></div>`;
-      return;
+      grid.innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">No APKs found in the latest release.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn android">View on GitHub</a></div>`;
+    } else {
+      let recDone = false;
+      apks.forEach(apk => {
+        const arch = detectArch(apk.name);
+        const meta = ARCH_META[arch];
+        const isRec = meta.rec && !recDone;
+        if (isRec) recDone = true;
+        const card = document.createElement('div');
+        card.className = 'apk-card' + (isRec ? ' rec-android' : '');
+        card.innerHTML = `
+          ${isRec ? '<div class="rec-badge android">Recommended</div>' : ''}
+          <div class="card-platform-icon">${PLATFORM_ICONS.android}</div>
+          <div class="apk-arch">${meta.label}</div>
+          <div class="apk-subtitle">${meta.sub}</div>
+          <div class="apk-who">${meta.who}</div>
+          <a href="${apk.browser_download_url}" class="dl-btn android" download>
+            ${dlIcon}
+            Download APK
+          </a>
+          <div class="apk-size">${fmtBytes(apk.size)}</div>
+        `;
+        grid.appendChild(card);
+      });
     }
-    let recDone = false;
-    apks.forEach(apk => {
-      const arch = detectArch(apk.name);
-      const meta = ARCH_META[arch];
-      const isRec = meta.rec && !recDone;
-      if (isRec) recDone = true;
-      const card = document.createElement('div');
-      card.className = 'apk-card' + (isRec ? ' rec' : '');
-      card.innerHTML = `
-        ${isRec ? '<div class="rec-badge">Recommended</div>' : ''}
-        <div class="apk-arch">${meta.label}</div>
-        <div class="apk-subtitle">${meta.sub}</div>
-        <div class="apk-who">${meta.who}</div>
-        <a href="${apk.browser_download_url}" class="dl-btn" download>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download APK
-        </a>
-        <div class="apk-size">${fmtBytes(apk.size)}</div>
-      `;
-      grid.appendChild(card);
-    });
+
+    // Windows
+    const winGrid = document.getElementById('win-grid');
+    winGrid.innerHTML = '';
+    const winAssets = getWinAssets(data);
+    if (!winAssets.length) {
+      winGrid.innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">No Windows installer found.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn windows">View on GitHub</a></div>`;
+    } else {
+      winAssets.forEach(a => winGrid.appendChild(buildDesktopCard(a, DESKTOP_META.windows)));
+    }
+
+    // Linux
+    const linuxGrid = document.getElementById('linux-grid');
+    linuxGrid.innerHTML = '';
+    const linuxAssets = getLinuxAssets(data);
+    if (!linuxAssets.length) {
+      linuxGrid.innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">No Linux AppImage found.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn linux">View on GitHub</a></div>`;
+    } else {
+      linuxAssets.forEach(a => linuxGrid.appendChild(buildDesktopCard(a, DESKTOP_META.linux)));
+    }
+
   } catch(e) {
-    document.getElementById('apk-grid').innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">Could not load release data.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn">Open GitHub Releases</a></div>`;
+    ['apk-grid','win-grid','linux-grid'].forEach(id => {
+      document.getElementById(id).innerHTML = `<div class="apk-card" style="padding:48px;text-align:center;"><p style="color:var(--text-dim);margin-bottom:20px;">Could not load release data.</p><a href="https://github.com/Shashwat-CODING/Drishya/releases/latest" target="_blank" class="dl-btn android">Open GitHub Releases</a></div>`;
+    });
     document.getElementById('rel-ver').textContent = 'Unknown';
   }
+}
+
+// ── PLATFORM SWITCHER ──
+function switchPlatform(p) {
+  ['android','windows','linux'].forEach(pl => {
+    document.getElementById('panel-'+pl).classList.toggle('active', pl===p);
+    const tab = document.getElementById('tab-'+pl);
+    tab.className = 'ptab' + (pl===p ? ` active-${pl}` : '');
+  });
 }
 
 let oldLoaded = false;
@@ -460,6 +659,7 @@ function toggleOldVersions() {
   else { list.classList.add('open'); toggle.classList.add('open'); if (!oldLoaded) { loadOldReleases(); oldLoaded = true; } }
 }
 function toggleRelease(i) { document.getElementById('rr-'+i).classList.toggle('expanded'); }
+
 async function loadOldReleases() {
   const container = document.getElementById('old-ver-list');
   const loading = document.getElementById('old-ver-loading');
@@ -467,20 +667,39 @@ async function loadOldReleases() {
     const res = await fetch('https://api.github.com/repos/Shashwat-CODING/Drishya/releases?per_page=20');
     if (!res.ok) throw new Error();
     const releases = await res.json();
-    const older = releases.slice(1).filter(r=>getApks(r).length>0);
+    const allAssets = r => [...getApks(r), ...getWinAssets(r), ...getLinuxAssets(r)];
+    const older = releases.slice(1).filter(r=>allAssets(r).length>0);
     document.getElementById('old-ver-count').textContent = older.length||'0';
     if (!older.length) { loading.textContent='No previous releases found.'; return; }
     loading.remove();
     older.forEach((release,i) => {
-      const apks = sortApks(getApks(release));
-      if (!apks.length) return;
+      const assets = [
+        ...sortApks(getApks(release)).map(a=>({ asset:a, platform:'android', label:ARCH_META[detectArch(a.name)].label, sub:ARCH_META[detectArch(a.name)].sub })),
+        ...getWinAssets(release).map(a=>({ asset:a, platform:'windows', label:'Windows Setup', sub:'NSIS Installer' })),
+        ...getLinuxAssets(release).map(a=>({ asset:a, platform:'linux', label:'AppImage', sub:'Linux x86_64' })),
+      ];
+      if (!assets.length) return;
       const row = document.createElement('div');
       row.className = 'release-row'; row.id = 'rr-'+i;
-      const assets = apks.map(apk => {
-        const arch = detectArch(apk.name); const meta = ARCH_META[arch];
-        return `<div class="asset-row"><div class="asset-arch">${meta.label}</div><div class="asset-sub">${meta.sub}</div><div class="asset-size">${fmtBytes(apk.size)}</div><a href="${apk.browser_download_url}" class="asset-dl" download><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>APK</a></div>`;
-      }).join('');
-      row.innerHTML = `<div class="release-row-header" onclick="toggleRelease(${i})"><div class="release-row-tag">${release.tag_name||'Release'}</div><div class="release-row-date">${fmtDateShort(release.published_at)}</div><div class="spacer"></div><div style="font-size:11px;color:var(--text-muted);margin-right:10px;">${apks.length} APK${apks.length>1?'s':''}</div><svg class="release-row-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="release-assets">${assets}</div>`;
+      const assetRows = assets.map(({asset,platform,label,sub}) => `
+        <div class="asset-row">
+          <div class="asset-platform-icon">${PLATFORM_ICONS[platform]}</div>
+          <div class="asset-arch">${label}</div>
+          <div class="asset-sub">${sub}</div>
+          <div class="asset-size">${fmtBytes(asset.size)}</div>
+          <a href="${asset.browser_download_url}" class="asset-dl" download>${dlIcon}DL</a>
+        </div>
+      `).join('');
+      row.innerHTML = `
+        <div class="release-row-header" onclick="toggleRelease(${i})">
+          <div class="release-row-tag">${release.tag_name||'Release'}</div>
+          <div class="release-row-date">${fmtDateShort(release.published_at)}</div>
+          <div class="spacer"></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-right:10px;">${assets.length} file${assets.length>1?'s':''}</div>
+          <svg class="release-row-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="release-assets">${assetRows}</div>
+      `;
       container.appendChild(row);
     });
   } catch(e) {
