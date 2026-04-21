@@ -1,0 +1,25 @@
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+  from = "/config"
+  to   = "/config.html"
+  status = 200
+
+[[redirects]]
+  from = "/download"
+  to   = "/download.html"
+  status = 200
+
+[[redirects]]
+  from = "/index"
+  to   = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
