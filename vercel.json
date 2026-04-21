@@ -14,6 +14,10 @@
       "dest": "/config.html"
     },
     {
+      "src": "/download",
+      "dest": "/download.html"
+    },
+    {
       "src": "/",
       "dest": "/index.html"
     },
@@ -22,7 +26,6 @@
     },
     {
       "src": "/(.*)",
-      
       "dest": "/index.html"
     }
   ]
