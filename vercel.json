@@ -17,6 +17,10 @@
       "src": "/download",
       "dest": "/download.html"
     },
+        {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
     {
       "src": "/",
       "dest": "/index.html"
