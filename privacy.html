@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drishya — Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for Drishya — free & open-source Android streaming app." />
+  <meta name="author" content="Shashwat-CODING" />
+  <meta name="theme-color" content="#e50914" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Drishya — Privacy Policy" />
+  <meta property="og:description" content="Privacy Policy for Drishya streaming app." />
+  <meta property="og:image" content="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" />
+  <meta property="og:url" content="https://drishya.app/privacy" />
+  <meta property="og:site_name" content="Drishya" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" />
+  <link rel="icon" type="image/png" href="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" />
+  <link rel="apple-touch-icon" href="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000000;
+      --surface: #0a0a0a;
+      --surface2: #111111;
+      --surface3: #181818;
+      --red: #e50914;
+      --red-lo: rgba(229,9,20,0.08);
+      --red-border: rgba(229,9,20,0.22);
+      --tg: #2AABEE;
+      --tg-lo: rgba(42,171,238,0.08);
+      --tg-border: rgba(42,171,238,0.2);
+      --text: #f0f0f0;
+      --text-dim: #666;
+      --text-muted: #2a2a2a;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000000;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px; height: 60px;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand img { width: 28px; height: 28px; border-radius: var(--radius-xs); object-fit: contain; }
+    .nav-brand span { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 3.5px; color: var(--red); }
+    .nav-links { display: flex; gap: 6px; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.2s;
+      padding: 6px 12px; border-radius: 20px;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.hl { color: var(--red); background: var(--red-lo); border: 1px solid var(--red-border); }
+    .nav-links a.hl:hover { background: rgba(229,9,20,0.14); }
+    .nav-links .tg-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--tg); background: var(--tg-lo); border: 1px solid var(--tg-border); cursor: pointer;
+    }
+    .nav-links .tg-btn:hover { background: rgba(42,171,238,0.14); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .nav-hamburger span { display: block; width: 20px; height: 2px; background: var(--text-dim); border-radius: 2px; }
+
+    /* ── LAYOUT ── */
+    main { flex: 1; display: flex; gap: 0; max-width: 1060px; margin: 0 auto; width: 100%; padding: 56px 24px 88px; }
+
+    /* ── SIDEBAR TOC ── */
+    .toc {
+      width: 220px; flex-shrink: 0; position: sticky;
+      top: 84px; align-self: flex-start;
+      margin-right: 52px; padding-top: 8px;
+    }
+    .toc-label { font-size: 9px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .toc-list a {
+      display: block; font-size: 12px; color: var(--text-dim); text-decoration: none;
+      padding: 7px 12px; border-radius: var(--radius-sm); border-left: 2px solid transparent;
+      transition: all 0.15s; letter-spacing: 0.2px; line-height: 1.4;
+    }
+    .toc-list a:hover { color: var(--text); background: var(--surface); border-left-color: var(--border-strong); }
+    .toc-list a.active { color: var(--text); background: var(--surface); border-left-color: var(--red); }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; min-width: 0; }
+
+    .page-header { margin-bottom: 48px; animation: fadeUp 0.5s ease both; }
+    .section-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 3.5px; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px,8vw,88px); letter-spacing: 4px; line-height: 0.88; margin-bottom: 20px; }
+    .page-title em { color: var(--red); font-style: normal; }
+    .page-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .meta-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 5px 12px;
+      font-size: 11px; color: var(--text-dim); letter-spacing: 0.3px;
+    }
+    .meta-pill svg { color: var(--red); flex-shrink: 0; }
+
+    /* ── POLICY SECTIONS ── */
+    .policy-section {
+      margin-bottom: 52px;
+      animation: fadeUp 0.5s ease both;
+      scroll-margin-top: 84px;
+    }
+    .policy-section:nth-child(1) { animation-delay: 0.05s; }
+    .policy-section:nth-child(2) { animation-delay: 0.1s; }
+    .policy-section:nth-child(3) { animation-delay: 0.15s; }
+    .policy-section:nth-child(4) { animation-delay: 0.18s; }
+    .policy-section:nth-child(5) { animation-delay: 0.21s; }
+    .policy-section:nth-child(6) { animation-delay: 0.24s; }
+    .policy-section:nth-child(7) { animation-delay: 0.27s; }
+    .policy-section:nth-child(8) { animation-delay: 0.3s; }
+
+    .policy-section-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .policy-section-inner:hover { border-color: var(--border-strong); }
+
+    .section-head {
+      display: flex; align-items: center; gap: 14px;
+      padding: 22px 24px; border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .section-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 11px;
+      letter-spacing: 2px; color: var(--red); opacity: 0.8;
+      background: var(--red-lo); border: 1px solid var(--red-border);
+      border-radius: 20px; padding: 2px 10px; flex-shrink: 0;
+    }
+    .section-icon {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      background: var(--red-lo); border: 1px solid var(--red-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--red); flex-shrink: 0;
+    }
+    .section-title-text {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--text);
+    }
+
+    .section-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    .policy-p { font-size: 13px; color: var(--text-dim); line-height: 1.85; }
+    .policy-p strong { color: var(--text); font-weight: 500; }
+    .policy-p a { color: var(--red); text-decoration: none; }
+    .policy-p a:hover { text-decoration: underline; }
+
+    .policy-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .policy-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: var(--text-dim); line-height: 1.75;
+    }
+    .policy-list li::before {
+      content: ''; display: block; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--red); flex-shrink: 0; margin-top: 8px; opacity: 0.7;
+    }
+    .policy-list li strong { color: var(--text); font-weight: 500; }
+
+    /* highlight box */
+    .highlight-box {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--red-lo); border: 1px solid var(--red-border);
+      border-radius: var(--radius-sm); padding: 16px 18px;
+    }
+    .highlight-box svg { flex-shrink: 0; margin-top: 1px; color: var(--red); }
+    .highlight-box p { font-size: 12.5px; color: var(--text-dim); line-height: 1.75; }
+    .highlight-box p strong { color: var(--text); font-weight: 500; }
+
+    .green-box {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.18);
+      border-radius: var(--radius-sm); padding: 16px 18px;
+    }
+    .green-box svg { flex-shrink: 0; margin-top: 1px; color: #22c55e; }
+    .green-box p { font-size: 12.5px; color: var(--text-dim); line-height: 1.75; }
+    .green-box p strong { color: var(--text); font-weight: 500; }
+
+    /* contact card */
+    .contact-card {
+      background: #000; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 20px 22px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .contact-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--red-lo); border: 1px solid var(--red-border);
+      display: flex; align-items: center; justify-content: center; color: var(--red); flex-shrink: 0;
+    }
+    .contact-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .contact-value { font-size: 13px; color: var(--text); }
+    .contact-value a { color: var(--red); text-decoration: none; }
+    .contact-value a:hover { text-decoration: underline; }
+
+    /* divider */
+    .section-divider { height: 1px; background: var(--border); margin: 0; }
+
+    /* ── TG FAB ── */
+    .tg-fab {
+      position: fixed; bottom: 28px; right: 28px; z-index: 300;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #000; border: 1px solid var(--tg-border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    }
+    .tg-fab:hover { border-color: var(--tg); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(42,171,238,0.3); }
+
+    /* ── TG MODAL ── */
+    .tg-backdrop {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(12px);
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .tg-backdrop.open { opacity: 1; pointer-events: all; }
+    .tg-modal {
+      background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+      width: 100%; max-width: 420px; overflow: hidden;
+      transform: scale(0.92) translateY(16px);
+      transition: transform 0.3s cubic-bezier(0.34,1.4,0.64,1), opacity 0.25s ease;
+      opacity: 0; position: relative;
+    }
+    .tg-backdrop.open .tg-modal { transform: scale(1) translateY(0); opacity: 1; }
+    .tg-modal-top-bar { height: 3px; background: linear-gradient(90deg,#2AABEE,#29c5f0,#2AABEE); background-size: 200% 100%; animation: shimmerBar 3s linear infinite; }
+    @keyframes shimmerBar { 0%{background-position:0% 0%} 100%{background-position:200% 0%} }
+    .tg-modal-body { padding: 32px 32px 28px; }
+    .tg-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dim); transition: all 0.15s; }
+    .tg-close:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: rotate(90deg); }
+    .tg-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .tg-brand-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg,#2AABEE,#1a8fd1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 24px rgba(42,171,238,0.3); }
+    .tg-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2.5px; color: var(--text); margin-bottom: 2px; }
+    .tg-handle { font-size: 12px; color: var(--tg); letter-spacing: 0.3px; }
+    .tg-desc { font-size: 13px; color: var(--text-dim); line-height: 1.7; margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+    .tg-perks { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .tg-perk { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--text-dim); }
+    .tg-perk-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--tg-lo); border: 1px solid var(--tg-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--tg); }
+    .tg-join-btn { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; padding: 14px; border-radius: 12px; background: var(--tg); border: none; color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; text-decoration: none; cursor: pointer; transition: all 0.16s; font-family: inherit; }
+    .tg-join-btn:hover { background: #30b8f8; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(42,171,238,0.4); }
+    .tg-footer-note { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 12px; letter-spacing: 0.3px; }
+    .tg-footer-note a { color: var(--tg); text-decoration: none; }
+
+    footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; }
+    footer a { color: var(--red); text-decoration: none; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:860px) {
+      .toc { display: none; }
+      main { padding: 48px 20px 72px; }
+    }
+    @media(max-width:768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .tg-fab { bottom: 20px; right: 20px; }
+      .tg-modal-body { padding: 24px 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://github.com/Shashwat-CODING/Drishya/raw/main/assets/logo.png" alt="Drishya" onerror="this.style.display='none'">
+    <span>DRISHYA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#features">Features</a></li>
+    <li><a href="/download">Download</a></li>
+    <li><a href="/#tech">Stack</a></li>
+    <li><a href="/config" class="hl">Configure</a></li>
+    <li><a class="tg-btn" onclick="openTelegram();return false;" href="#">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z"/></svg>
+      Community
+    </a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<main>
+  <!-- SIDEBAR TOC -->
+  <aside class="toc" id="toc">
+    <div class="toc-label">On this page</div>
+    <ul class="toc-list" id="toc-list">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#data-collected">Data We Collect</a></li>
+      <li><a href="#data-not-collected">What We Don't Collect</a></li>
+      <li><a href="#third-party">Third-Party Services</a></li>
+      <li><a href="#storage">Local Storage</a></li>
+      <li><a href="#network">Network Requests</a></li>
+      <li><a href="#children">Children's Privacy</a></li>
+      <li><a href="#changes">Policy Changes</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    <div class="page-header">
+      <div class="section-eyebrow">Legal</div>
+      <div class="page-title">PRIVACY<br>POLICY<em>.</em></div>
+      <div class="page-meta">
+        <div class="meta-pill">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Last updated: April 2025
+        </div>
+        <div class="meta-pill">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          MIT Licensed · Open Source
+        </div>
+        <div class="meta-pill">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Applies to: Drishya Android App
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. OVERVIEW -->
+    <div class="policy-section" id="overview">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">01</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="section-title-text">Overview</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Drishya (<strong>"the App"</strong>) is a free, open-source Android streaming application developed and maintained by <strong>Shashwat-CODING</strong>. This Privacy Policy explains how the App handles information when you use it.
+          </p>
+          <div class="green-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <p><strong>Short version:</strong> Drishya does not collect, store, or transmit any personally identifiable information. The App is designed to function entirely without an account or sign-in.</p>
+          </div>
+          <p class="policy-p">
+            By installing or using Drishya, you agree to this policy. If you do not agree, please uninstall the App. This policy applies solely to the official Drishya application distributed via GitHub Releases at <a href="https://github.com/Shashwat-CODING/Drishya" target="_blank">github.com/Shashwat-CODING/Drishya</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. DATA COLLECTED -->
+    <div class="policy-section" id="data-collected">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">02</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+          <div class="section-title-text">Data We Collect</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Drishya collects <strong>no personal data</strong> from users. We do not operate any servers, databases, or analytics pipelines that receive user information. Specifically:
+          </p>
+          <ul class="policy-list">
+            <li><strong>No account required.</strong> You do not need to register, log in, or provide any personal details to use the App.</li>
+            <li><strong>No analytics or telemetry.</strong> The App does not embed crash reporting SDKs, usage analytics, or advertising frameworks.</li>
+            <li><strong>No device fingerprinting.</strong> We do not collect device identifiers, hardware IDs, or fingerprints of any kind.</li>
+            <li><strong>No location data.</strong> The App never requests or uses GPS, network-based, or coarse location permissions.</li>
+            <li><strong>No contact or media access.</strong> Drishya does not access your contacts, gallery, camera, or microphone.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. WHAT WE DON'T COLLECT -->
+    <div class="policy-section" id="data-not-collected">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">03</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="section-title-text">What We Don't Collect</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">To be explicit, Drishya never collects or processes:</p>
+          <ul class="policy-list">
+            <li>Name, email address, phone number, or any contact information</li>
+            <li>IP address or geolocation data logged on our end</li>
+            <li>Browsing history, search queries, or watch history transmitted externally</li>
+            <li>Payment information of any kind (the App is free)</li>
+            <li>Biometric data or sensitive personal attributes</li>
+            <li>Social media credentials or OAuth tokens</li>
+          </ul>
+          <div class="green-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <p>All watch history, preferences, and configuration you set in the App are stored <strong>exclusively on your own device</strong> using Android Shared Preferences and are never sent anywhere.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. THIRD-PARTY SERVICES -->
+    <div class="policy-section" id="third-party">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">04</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/></svg></div>
+          <div class="section-title-text">Third-Party Services</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Drishya connects to external streaming providers and backend instances that <strong>you configure</strong>. When you stream content, your device makes network requests to those services. Those services operate under their own privacy policies, which are separate from this document.
+          </p>
+          <ul class="policy-list">
+            <li><strong>Configured providers.</strong> Any backend URL you set via the Configure page is stored locally and used solely to fetch streaming content on your behalf.</li>
+            <li><strong>Content delivery networks.</strong> Video streams and metadata may be served by CDNs operated by third parties. Standard HTTP request headers (including your IP address) are sent as part of normal network operation — this is outside our control.</li>
+            <li><strong>GitHub Releases API.</strong> The App's download page queries the GitHub API to display the latest release version. No user data is sent in this request beyond standard HTTP headers.</li>
+            <li><strong>Image caching.</strong> Poster images and thumbnails are fetched from external URLs (e.g. TMDB CDN) and cached locally on your device using <code>cached_network_image</code>.</li>
+          </ul>
+          <div class="highlight-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <p>We are not responsible for the privacy practices of third-party providers. We encourage you to review the privacy policies of any external services you connect Drishya to.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. LOCAL STORAGE -->
+    <div class="policy-section" id="storage">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">05</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+          <div class="section-title-text">Local Storage</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Some data is stored locally on your device to improve your experience. This data never leaves your device:
+          </p>
+          <ul class="policy-list">
+            <li><strong>Watch history.</strong> Titles you have watched and resume positions are saved via Android Shared Preferences.</li>
+            <li><strong>Provider configuration.</strong> The backend URL(s) you configure are stored locally so the App can reconnect on launch.</li>
+            <li><strong>Image cache.</strong> Thumbnails and posters are cached on-disk to reduce bandwidth on repeat visits.</li>
+            <li><strong>App preferences.</strong> UI settings such as subtitle style, preferred audio track, or theme preferences.</li>
+          </ul>
+          <p class="policy-p">
+            You can clear all locally stored data at any time by clearing the App's storage via <strong>Android Settings → Apps → Drishya → Storage → Clear Data</strong>, or by uninstalling the App.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. NETWORK REQUESTS -->
+    <div class="policy-section" id="network">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">06</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg></div>
+          <div class="section-title-text">Network Requests</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Drishya makes outbound network requests only for the following purposes:
+          </p>
+          <ul class="policy-list">
+            <li>Fetching stream URLs and metadata from your configured provider backend</li>
+            <li>Loading poster/thumbnail images from content metadata endpoints</li>
+            <li>Buffering and playing video/audio streams via <code>media_kit</code></li>
+            <li>Checking for new App releases via the GitHub Releases API (on the website, not in-app)</li>
+          </ul>
+          <p class="policy-p">
+            All requests are initiated by you through your own use of the App. The App does not "phone home" to any Drishya-operated server at startup, in the background, or at any other time.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. CHILDREN -->
+    <div class="policy-section" id="children">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">07</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="section-title-text">Children's Privacy</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            Drishya is a general-purpose streaming application and is not directed at children under the age of 13. Because the App does not collect any personal information from any user regardless of age, it does not knowingly collect data from children.
+          </p>
+          <p class="policy-p">
+            Content available through configured streaming providers may not be appropriate for all ages. Parents and guardians are responsible for supervising their children's use of the App and the content accessed through it.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. POLICY CHANGES -->
+    <div class="policy-section" id="changes">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">08</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg></div>
+          <div class="section-title-text">Policy Changes</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            We may update this Privacy Policy from time to time. Any changes will be reflected by an updated <strong>"Last updated"</strong> date at the top of this page. Continued use of Drishya after a policy update constitutes your acceptance of the revised policy.
+          </p>
+          <p class="policy-p">
+            Since Drishya is open-source, you can always review the full history of this policy and all App code at the <a href="https://github.com/Shashwat-CODING/Drishya" target="_blank">GitHub repository</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. CONTACT -->
+    <div class="policy-section" id="contact">
+      <div class="policy-section-inner">
+        <div class="section-head">
+          <span class="section-num">09</span>
+          <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="section-title-text">Contact</div>
+        </div>
+        <div class="section-body">
+          <p class="policy-p">
+            If you have any questions, concerns, or requests regarding this Privacy Policy or the App's data practices, you can reach us through the following channels:
+          </p>
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">GitHub</div>
+              <div class="contact-value"><a href="https://github.com/Shashwat-CODING/Drishya/issues" target="_blank">github.com/Shashwat-CODING/Drishya/issues</a></div>
+            </div>
+          </div>
+          <div class="contact-card" style="margin-top:10px;">
+            <div class="contact-icon" style="background:var(--tg-lo);border-color:var(--tg-border);color:var(--tg);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">Telegram Community</div>
+              <div class="contact-value"><a href="https://t.me/drishyapp" target="_blank">t.me/drishyapp</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<footer>
+  <p>Drishya &nbsp;·&nbsp; <a href="https://github.com/Shashwat-CODING/Drishya" target="_blank">GitHub</a> &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a></p>
+</footer>
+
+<!-- TG FAB -->
+<button class="tg-fab" onclick="openTelegram()" aria-label="Join Telegram">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.22l-1.68 7.92c-.12.56-.45.7-.91.43l-2.52-1.86-1.21 1.17c-.14.14-.25.25-.51.25l.18-2.57 4.7-4.24c.2-.18-.05-.28-.32-.1L7.68 14.3l-2.46-.77c-.54-.17-.55-.54.11-.8l9.62-3.71c.44-.16.83.1.68.68z" fill="#2AABEE"/>
+  </svg>
+</button>
+
+<!-- TG MODAL -->
+<div class="tg-backdrop" id="tg-backdrop" onclick="handleBackdropClick(event)">
+  <div class="tg-modal" id="tg-modal">
+    <div class="tg-modal-top-bar"></div>
+    <div class="tg-modal-body">
+      <button class="tg-close" onclick="closeTelegram()" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="tg-header">
+        <div class="tg-brand-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z" fill="#fff"/></svg>
+        </div>
+        <div>
+          <div class="tg-name">DRISHYA COMMUNITY</div>
+          <div class="tg-handle">t.me/drishyapp</div>
+        </div>
+      </div>
+      <div class="tg-desc">Get updates, report issues, request features, and connect with other Drishya users — all in one place.</div>
+      <div class="tg-perks">
+        <div class="tg-perk"><div class="tg-perk-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>Early release announcements &amp; changelogs</div>
+        <div class="tg-perk"><div class="tg-perk-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Bug reports &amp; feature requests direct to dev</div>
+        <div class="tg-perk"><div class="tg-perk-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>Active community of streamers</div>
+        <div class="tg-perk"><div class="tg-perk-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>APK &amp; provider config tips</div>
+      </div>
+      <a href="https://t.me/drishyapp" target="_blank" class="tg-join-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20.665 3.717L2.93 10.57c-1.196.48-1.189 1.148-.219 1.445l4.538 1.416 10.528-6.637c.496-.302.951-.14.578.192L9.38 14.363l-.309 4.588c.452 0 .651-.207.906-.453l2.174-2.114 4.52 3.339c.833.46 1.432.222 1.637-.771L21.964 5.1c.296-1.187-.454-1.727-1.299-1.383z" fill="#fff"/></svg>
+        Join on Telegram
+      </a>
+      <div class="tg-footer-note">Open in app or browser &nbsp;·&nbsp; <a href="https://t.me/drishyapp" target="_blank">t.me/drishyapp</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Telegram modal
+  function openTelegram() { document.getElementById('tg-backdrop').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeTelegram() { document.getElementById('tg-backdrop').classList.remove('open'); document.body.style.overflow=''; }
+  function handleBackdropClick(e) { if(e.target===document.getElementById('tg-backdrop')) closeTelegram(); }
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeTelegram(); });
+
+  // Mobile nav
+  function toggleMobileNav() {
+    const links = document.querySelector('.nav-links');
+    if (!links) return;
+    if (links.style.display==='flex') { links.style.cssText=''; }
+    else { links.style.cssText=`display:flex;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(0,0,0,0.98);border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 24px 24px;gap:4px;z-index:199;`; }
+  }
+
+  // Active TOC highlight on scroll
+  const sections = document.querySelectorAll('.policy-section[id]');
+  const tocLinks = document.querySelectorAll('.toc-list a');
+  function updateToc() {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', updateToc, { passive: true });
+  updateToc();
+</script>
+</body>
+</html>
