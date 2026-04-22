@@ -1,19 +1,19 @@
 [build]
   publish = "."
 
-# ── Asset headers ──────────────────────────────────────────────
+# ── Security & asset headers ───────────────────────────────────
 [[headers]]
   for = "/.well-known/assetlinks.json"
   [headers.values]
-    Content-Type  = "application/json"
+    Content-Type                = "application/json"
     Access-Control-Allow-Origin = "*"
 
 [[headers]]
   for = "/*.html"
   [headers.values]
-    X-Frame-Options       = "DENY"
+    X-Frame-Options        = "DENY"
     X-Content-Type-Options = "nosniff"
-    Referrer-Policy       = "strict-origin-when-cross-origin"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
 
 [[headers]]
   for = "/*"
@@ -21,26 +21,28 @@
     X-Frame-Options        = "DENY"
     X-Content-Type-Options = "nosniff"
 
-# ── Clean URL redirects ────────────────────────────────────────
-# /config  → config.html
+# ── Clean URL rewrites (200 = serve, no redirect flash) ────────
 [[redirects]]
   from   = "/config"
   to     = "/config.html"
   status = 200
 
-# /download → download.html
 [[redirects]]
   from   = "/download"
   to     = "/download.html"
   status = 200
 
-# /privacy → privacy.html
 [[redirects]]
   from   = "/privacy"
   to     = "/privacy.html"
   status = 200
 
-# SPA fallback — everything else → index.html
+[[redirects]]
+  from   = "/dmca"
+  to     = "/dmca.html"
+  status = 200
+
+# ── SPA fallback ───────────────────────────────────────────────
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
