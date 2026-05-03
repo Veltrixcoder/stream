@@ -90,7 +90,7 @@ export const formatProxyUrl = (originalUrl) => {
     console.error("Invalid URL", e);
   }
 
-  return "https://themovie.kenya162004.workers.dev/" +
+  return "https://movieboxproxy.veltrix620.workers.dev/" +
     "?url=" + encodeURIComponent(videoUrl) +
     "&origin=" + encodeURIComponent(origin) +
     "&referer=" + encodeURIComponent(referer);
