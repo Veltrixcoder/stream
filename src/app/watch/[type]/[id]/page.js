@@ -16,10 +16,35 @@ export default function WatchPage() {
   const [loading, setLoading] = useState(true);
   const [streamingLoading, setStreamingLoading] = useState(false);
   const [currentServerIdx, setCurrentServerIdx] = useState(0);
+  const [season, setSeason] = useState(1);
+  const [episode, setEpisode] = useState(1);
   const player = useRef(null);
 
+  const fetchStream = async (serverIdx, s = season, e = episode) => {
+    setStreamingLoading(true);
+    setCurrentServerIdx(serverIdx);
+    setCurrentSource(null);
+    try {
+      const data = await STREAM_API.getSources(
+        SOURCES[serverIdx], type, id, 
+        type === 'tv' ? s : undefined, 
+        type === 'tv' ? e : undefined
+      );
+      if (data && data.length > 0) {
+        setSources(data);
+        setCurrentSource(data[0]);
+      } else {
+        tryNextServer(serverIdx, s, e);
+      }
+    } catch (err) {
+      tryNextServer(serverIdx, s, e);
+    } finally {
+      setStreamingLoading(false);
+    }
+  };
+
   // Automatically skips to the next server provider if the current one fails
-  const tryNextServer = async (serverIdx = currentServerIdx) => {
+  const tryNextServer = async (serverIdx = currentServerIdx, s = season, e = episode) => {
     const nextIdx = serverIdx + 1;
     if (nextIdx >= SOURCES.length) {
       console.error("All servers exhausted.");
@@ -33,39 +58,34 @@ export default function WatchPage() {
     setCurrentServerIdx(nextIdx);
     
     try {
-      const data = await STREAM_API.getSources(SOURCES[nextIdx], type, id);
+      const data = await STREAM_API.getSources(
+        SOURCES[nextIdx], type, id, 
+        type === 'tv' ? s : undefined, 
+        type === 'tv' ? e : undefined
+      );
       if (data && data.length > 0) {
         setSources(data);
         setCurrentSource(data[0]);
       } else {
-        tryNextServer(nextIdx);
+        tryNextServer(nextIdx, s, e);
       }
-    } catch (e) {
+    } catch (err) {
       console.error(`Server ${SOURCES[nextIdx]} API failed, trying next...`);
-      tryNextServer(nextIdx);
+      tryNextServer(nextIdx, s, e);
     } finally {
       setStreamingLoading(false);
     }
   };
 
-  const manualServerSwitch = async (serverIdx) => {
+  const manualServerSwitch = (serverIdx) => {
     if (serverIdx === currentServerIdx) return;
-    setStreamingLoading(true);
-    setCurrentServerIdx(serverIdx);
-    setCurrentSource(null);
-    try {
-      const data = await STREAM_API.getSources(SOURCES[serverIdx], type, id);
-      if (data && data.length > 0) {
-        setSources(data);
-        setCurrentSource(data[0]);
-      } else {
-        tryNextServer(serverIdx);
-      }
-    } catch (e) {
-      tryNextServer(serverIdx);
-    } finally {
-      setStreamingLoading(false);
-    }
+    fetchStream(serverIdx, season, episode);
+  };
+
+  const handleEpisodeChange = (newSeason, newEpisode) => {
+    setSeason(newSeason);
+    setEpisode(newEpisode);
+    fetchStream(currentServerIdx, newSeason, newEpisode);
   };
 
   useEffect(() => {
@@ -79,20 +99,7 @@ export default function WatchPage() {
         setLoading(false);
 
         // Start fallback from first source
-        setStreamingLoading(true);
-        try {
-          const data = await STREAM_API.getSources(SOURCES[0], type, id);
-          if (data && data.length > 0) {
-            setSources(data);
-            setCurrentSource(data[0]);
-          } else {
-            tryNextServer(0);
-          }
-        } catch (e) {
-          tryNextServer(0);
-        } finally {
-          setStreamingLoading(false);
-        }
+        fetchStream(0, 1, 1);
 
         // Save to History
         const history = JSON.parse(localStorage.getItem('drishya_history') || '[]');
@@ -130,9 +137,9 @@ export default function WatchPage() {
             playsInline
             className="player"
             autoPlay
-            onError={(e) => {
-              console.log("Player error:", e);
-              tryNextServer(currentServerIdx);
+            onError={(err) => {
+              console.log("Player error:", err);
+              tryNextServer(currentServerIdx, season, episode);
             }}
           >
             <MediaProvider>
@@ -160,6 +167,40 @@ export default function WatchPage() {
       <div className="content-details">
         <div className="main-info">
           <h1>{details?.title || details?.name}</h1>
+          
+          {type === 'tv' && details?.seasons && (
+            <div className="tv-controls" style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+              <select 
+                value={season} 
+                onChange={(e) => {
+                  const newSeason = parseInt(e.target.value);
+                  handleEpisodeChange(newSeason, 1);
+                }}
+                className="glass"
+                style={{ padding: '12px 20px', borderRadius: '14px', background: 'var(--glass)', color: 'white', border: '1px solid var(--glass-border)', outline: 'none', cursor: 'pointer', fontWeight: '600' }}
+              >
+                {details.seasons.filter(s => s.season_number > 0).map(s => (
+                  <option key={s.season_number} value={s.season_number} style={{ background: '#111' }}>
+                    Season {s.season_number}
+                  </option>
+                ))}
+              </select>
+
+              <select 
+                value={episode} 
+                onChange={(e) => handleEpisodeChange(season, parseInt(e.target.value))}
+                className="glass"
+                style={{ padding: '12px 20px', borderRadius: '14px', background: 'var(--glass)', color: 'white', border: '1px solid var(--glass-border)', outline: 'none', cursor: 'pointer', fontWeight: '600' }}
+              >
+                {Array.from({ length: details.seasons.find(s => s.season_number === season)?.episode_count || 1 }).map((_, i) => (
+                  <option key={i + 1} value={i + 1} style={{ background: '#111' }}>
+                    Episode {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="meta-row">
             <div className="meta-item">
               <Calendar size={16} />

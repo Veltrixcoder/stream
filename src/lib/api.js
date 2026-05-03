@@ -47,8 +47,8 @@ export const STREAM_API = {
       ? `/media/${sourceId}/movie`
       : `/media/${sourceId}/tv`;
     const params = { id };
-    if (season) params.s = season;
-    if (episode) params.e = episode;
+    if (season) params.season = season;
+    if (episode) params.episode = episode;
     return fetchProxy(endpoint, params);
   }
 };
