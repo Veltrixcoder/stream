@@ -2,11 +2,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { TMDB_API, STREAM_API, SOURCES } from '@/lib/api';
-import { MediaPlayer, MediaProvider, Poster, Track } from '@vidstack/react';
+import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
-import { Calendar, Star, Clock, List, Loader2 } from 'lucide-react';
+import { Calendar, Star, Clock, Server, Loader2 } from 'lucide-react';
 
 export default function WatchPage() {
   const { type, id } = useParams();
@@ -15,46 +15,56 @@ export default function WatchPage() {
   const [currentSource, setCurrentSource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [streamingLoading, setStreamingLoading] = useState(false);
-  const [currentSourceIdx, setCurrentSourceIdx] = useState(0);
-  const [linkIdx, setLinkIdx] = useState(0);
+  const [currentServerIdx, setCurrentServerIdx] = useState(0);
   const player = useRef(null);
 
-  const tryNextSource = async (sIdx = currentSourceIdx, lIdx = linkIdx + 1) => {
-    // If there are more links in current source, try them
-    if (sources && lIdx < sources.length) {
-      console.log(`Trying next link (${lIdx + 1}) in current source...`);
-      setLinkIdx(lIdx);
-      setCurrentSource(sources[lIdx]);
-      return;
-    }
-
-    // Otherwise, move to next source in SOURCES list
-    const nextSIdx = sIdx + 1;
-    if (nextSIdx >= SOURCES.length) {
-      console.error("All sources and links exhausted.");
+  // Automatically skips to the next server provider if the current one fails
+  const tryNextServer = async (serverIdx = currentServerIdx) => {
+    const nextIdx = serverIdx + 1;
+    if (nextIdx >= SOURCES.length) {
+      console.error("All servers exhausted.");
       setStreamingLoading(false);
       setCurrentSource(null);
       return;
     }
 
-    console.log(`Switching to source ${SOURCES[nextSIdx]}...`);
+    console.log(`Server ${SOURCES[serverIdx]} failed. Switching to Server ${SOURCES[nextIdx]}...`);
     setStreamingLoading(true);
-    setCurrentSourceIdx(nextSIdx);
-    setLinkIdx(0);
+    setCurrentServerIdx(nextIdx);
     
     try {
-      const data = await STREAM_API.getSources(SOURCES[nextSIdx], type, id);
+      const data = await STREAM_API.getSources(SOURCES[nextIdx], type, id);
       if (data && data.length > 0) {
         setSources(data);
         setCurrentSource(data[0]);
-        setStreamingLoading(false);
       } else {
-        // This source has no links, try next one immediately
-        tryNextSource(nextSIdx, 0);
+        tryNextServer(nextIdx);
       }
     } catch (e) {
-      console.error(`Source ${SOURCES[nextSIdx]} API failed, trying next...`);
-      tryNextSource(nextSIdx, 0);
+      console.error(`Server ${SOURCES[nextIdx]} API failed, trying next...`);
+      tryNextServer(nextIdx);
+    } finally {
+      setStreamingLoading(false);
+    }
+  };
+
+  const manualServerSwitch = async (serverIdx) => {
+    if (serverIdx === currentServerIdx) return;
+    setStreamingLoading(true);
+    setCurrentServerIdx(serverIdx);
+    setCurrentSource(null);
+    try {
+      const data = await STREAM_API.getSources(SOURCES[serverIdx], type, id);
+      if (data && data.length > 0) {
+        setSources(data);
+        setCurrentSource(data[0]);
+      } else {
+        tryNextServer(serverIdx);
+      }
+    } catch (e) {
+      tryNextServer(serverIdx);
+    } finally {
+      setStreamingLoading(false);
     }
   };
 
@@ -75,12 +85,13 @@ export default function WatchPage() {
           if (data && data.length > 0) {
             setSources(data);
             setCurrentSource(data[0]);
-            setStreamingLoading(false);
           } else {
-            tryNextSource(0, 0);
+            tryNextServer(0);
           }
         } catch (e) {
-          tryNextSource(0, 0);
+          tryNextServer(0);
+        } finally {
+          setStreamingLoading(false);
         }
 
         // Save to History
@@ -110,7 +121,7 @@ export default function WatchPage() {
   return (
     <div className="watch-page fade-in">
       <div className="player-container glass">
-        {currentSource ? (
+        {currentSource && !streamingLoading ? (
           <MediaPlayer
             ref={player}
             title={details?.title || details?.name}
@@ -118,9 +129,10 @@ export default function WatchPage() {
             crossOrigin
             playsInline
             className="player"
-            onError={() => {
-              console.log("Player error, triggering fallback...");
-              tryNextSource();
+            autoPlay
+            onError={(e) => {
+              console.log("Player error:", e);
+              tryNextServer(currentServerIdx);
             }}
           >
             <MediaProvider>
@@ -168,25 +180,45 @@ export default function WatchPage() {
         </div>
 
         <div className="side-panel">
-          {sources.length > 1 && (
-            <div className="sources-list glass-card">
-              <h3><List size={20} /> Select Quality</h3>
-              <div className="source-buttons">
-                {sources.map((source, index) => (
-                  <button 
-                    key={index}
-                    className={currentSource?.url === source.url ? 'active' : ''}
-                    onClick={() => setCurrentSource(source)}
-                  >
-                    {source.quality}p - Link {index + 1}
-                  </button>
-                ))}
-              </div>
+          <div className="sources-list glass-card" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Server size={20} /> Select Server
+            </h3>
+            <div className="source-buttons">
+              {SOURCES.map((sourceId, index) => (
+                <button 
+                  key={sourceId}
+                  className={currentServerIdx === index ? 'active' : ''}
+                  onClick={() => manualServerSwitch(index)}
+                  style={{ width: '100%' }}
+                >
+                  Server {index + 1} {currentServerIdx === index ? '(Active)' : ''}
+                </button>
+              ))}
             </div>
-          )}
+
+            {sources.length > 1 && (
+              <>
+                <h3 style={{ fontSize: '16px', marginTop: '24px', marginBottom: '12px', color: 'var(--text-dim)' }}>
+                  Quality Links
+                </h3>
+                <div className="source-buttons">
+                  {sources.map((source, index) => (
+                    <button 
+                      key={index}
+                      className={currentSource?.url === source.url ? 'active' : ''}
+                      onClick={() => setCurrentSource(source)}
+                      style={{ fontSize: '12px', padding: '8px 12px' }}
+                    >
+                      {source.quality}p - Link {index + 1}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-
     </div>
   );
 }
