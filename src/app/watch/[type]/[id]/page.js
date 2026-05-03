@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { TMDB_API, STREAM_API, SOURCES } from '@/lib/api';
+import { TMDB_API, STREAM_API, SOURCES, formatProxyUrl } from '@/lib/api';
 import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import '@vidstack/react/player/styles/default/theme.css';
@@ -125,7 +125,7 @@ export default function WatchPage() {
           <MediaPlayer
             ref={player}
             title={details?.title || details?.name}
-            src={currentSource.url}
+            src={formatProxyUrl(currentSource.url)}
             crossOrigin
             playsInline
             className="player"

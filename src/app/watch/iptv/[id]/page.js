@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { IPTV_API } from '@/lib/api';
+import { IPTV_API, formatProxyUrl } from '@/lib/api';
 import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import '@vidstack/react/player/styles/default/theme.css';
@@ -66,7 +66,7 @@ export default function IPTVWatchPage() {
           <MediaPlayer
             ref={player}
             title={channel.name}
-            src={channel.streams[0].url}
+            src={formatProxyUrl(channel.streams[0].url)}
             crossOrigin
             playsInline
             className="player"

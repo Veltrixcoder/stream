@@ -59,3 +59,39 @@ export const IPTV_API = {
   getChannelDetails: (id) => fetchProxy(`/iptv/channels/${id}`),
   searchChannels: (query) => fetchProxy('/iptv/search', { query }),
 };
+
+export const formatProxyUrl = (originalUrl) => {
+  if (!originalUrl) return originalUrl;
+  
+  let videoUrl = originalUrl;
+  let origin = "https://themoviebox.org";
+  let referer = "https://themoviebox.org/";
+
+  try {
+    const urlObj = new URL(originalUrl);
+    
+    // Check if it's already using a proxy
+    if (urlObj.searchParams.has('url')) {
+      videoUrl = urlObj.searchParams.get('url');
+      
+      // Extract headers if present
+      if (urlObj.searchParams.has('headers')) {
+        try {
+          const headersStr = urlObj.searchParams.get('headers');
+          const headersObj = JSON.parse(headersStr);
+          if (headersObj.Origin) origin = headersObj.Origin;
+          if (headersObj.Referer) referer = headersObj.Referer;
+        } catch(e) {
+          console.error("Failed to parse headers", e);
+        }
+      }
+    }
+  } catch(e) {
+    console.error("Invalid URL", e);
+  }
+
+  return "https://themovie.kenya162004.workers.dev/" +
+    "?url=" + encodeURIComponent(videoUrl) +
+    "&origin=" + encodeURIComponent(origin) +
+    "&referer=" + encodeURIComponent(referer);
+};
