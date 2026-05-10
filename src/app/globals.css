@@ -155,6 +155,7 @@ button {
   align-items: center;
   gap: 0px;
   height: 100%;
+  padding-top: 20px; /* Shift buttons down a little */
 }
 
 .nav-item {
