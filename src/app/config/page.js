@@ -10,7 +10,7 @@ const providers = [
 ]
 
 export default function ConfigPage() {
-  const BASE_URL = "https://veltrixcode-drishya-lbb.hf.space/"
+  const BASE_URL = "https://docker-1e4b-7860.prg1.zerops.app/"
   const deeplink = `luxa://config?base=${encodeURIComponent(BASE_URL)}`
 
   return (
