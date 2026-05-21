@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 :root {
   --background: #050505;
   --foreground: #ffffff;
@@ -30,7 +28,7 @@ body {
     radial-gradient(circle at 0% 0%, rgba(0, 122, 255, 0.05) 0%, transparent 40%),
     radial-gradient(circle at 100% 100%, rgba(0, 122, 255, 0.05) 0%, transparent 40%);
   color: var(--foreground);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-karst), -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
 }
@@ -1347,6 +1345,218 @@ button {
 .cta-banner h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 
 .cta-banner p { font-size: 14px; color: var(--text-dim); }
+
+/* Dynamic Downloads styling */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: var(--accent);
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 32px;
+  border-radius: 24px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  backdrop-filter: var(--apple-blur);
+  -webkit-backdrop-filter: var(--apple-blur);
+}
+
+.error-message h3 {
+  color: #ff453a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.error-message p {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.changelog-section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.changelog-section h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.changelog-card {
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+}
+
+.changelog-content {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.changelog-h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.changelog-h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.changelog-h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.changelog-li {
+  margin-left: 20px;
+  margin-bottom: 6px;
+  list-style-type: disc;
+}
+
+.changelog-p {
+  margin-bottom: 12px;
+}
+
+.changelog-hr {
+  border: 0;
+  height: 1px;
+  background: var(--glass-border);
+  margin: 20px 0;
+}
+
+.changelog-space {
+  height: 8px;
+}
+
+.older-releases-section {
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.older-releases-section h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.older-releases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.older-release-card {
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.older-release-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.older-release-header h4 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.older-release-header .release-date {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.older-assets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.older-asset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  transition: var(--transition);
+  color: inherit;
+}
+
+.older-asset-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.older-asset-name {
+  color: #fff;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 170px;
+}
+
+.older-asset-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.older-asset-dl {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.older-asset-item:hover .older-asset-dl {
+  transform: translateY(1px);
+}
 
 /* Legal Pages Shared */
 .legal-page { max-width: 800px; margin: 0 auto; }

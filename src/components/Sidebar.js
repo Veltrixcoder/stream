@@ -8,7 +8,6 @@ const navItems = [
   { name: 'Home', path: '/' },
   { name: 'TV Shows', path: '/tv' },
   { name: 'Live TV', path: '/livetv' },
-  { name: 'Config', path: '/config' },
   { name: 'Library', path: '/library' },
   { name: 'Download', path: '/download' },
   { name: 'DMCA', path: '/dmca' },

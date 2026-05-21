@@ -8,7 +8,6 @@ import {
   Tv, 
   Search, 
   Download,
-  Settings,
   ShieldAlert,
   Play
 } from 'lucide-react'
@@ -18,7 +17,6 @@ const navItems = [
   { name: 'Home', path: '/', icon: Home },
   { name: 'TV', path: '/tv', icon: Tv },
   { name: 'Live', path: '/livetv', icon: Play },
-  { name: 'Config', path: '/config', icon: Settings },
   { name: 'Download', path: '/download', icon: Download },
 ]
 

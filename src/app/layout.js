@@ -1,6 +1,39 @@
+import localFont from 'next/font/local'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
 import { Send } from 'lucide-react'
+
+const karstFont = localFont({
+  src: [
+    {
+      path: './fonts/karst/Karst-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: './fonts/karst/Karst-Light.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/karst/Karst-Light.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './fonts/karst/Karst-ExtraBold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/karst/Karst-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-karst',
+  display: 'swap',
+})
 
 export const metadata = {
   title: 'Luxa - Premium Movie Streaming',
@@ -19,7 +52,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={karstFont.variable}>
       <body>
         <div className="layout-container">
           <Sidebar />

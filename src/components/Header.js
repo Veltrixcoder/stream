@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Search, Settings } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -14,9 +14,6 @@ export default function Header() {
       <div className="header-right">
         <Link href="/search" className="header-icon">
           <Search size={20} />
-        </Link>
-        <Link href="/config" className="header-icon">
-          <Settings size={20} />
         </Link>
       </div>
     </header>
